@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import TradingCardIcon from './TradingCardIcon'
 
 export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onOpenReports }) {
   const [showForm, setShowForm] = useState(false)
@@ -19,7 +20,7 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onOp
       <header className="app-header">
         <div className="header-inner">
           <div className="header-title">
-            <span className="card-icon">&#9827;</span>
+            <TradingCardIcon size={38} className="card-icon-svg" />
             <h1>Card Collector</h1>
           </div>
           <p className="header-sub">Track your sets — see what you have and what you need</p>
@@ -76,7 +77,7 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onOp
 
         {sets.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">&#9827;</div>
+            <div className="empty-icon"><TradingCardIcon size={64} /></div>
             <p>No card sets yet. Add your first set to get started!</p>
           </div>
         ) : (

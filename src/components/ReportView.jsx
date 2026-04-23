@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import TradingCardIcon from './TradingCardIcon'
 
 export default function ReportView({ sets, onBack }) {
   const [selectedSetId, setSelectedSetId] = useState(null)
@@ -15,7 +16,7 @@ export default function ReportView({ sets, onBack }) {
         <div className="header-inner">
           <button className="back-btn" onClick={onBack}>&#8592; Back</button>
           <div className="header-title">
-            <span className="card-icon">&#9827;</span>
+            <TradingCardIcon size={38} className="card-icon-svg" />
             <h1>Reports</h1>
           </div>
           <p className="header-sub">Select a set to view and print</p>
@@ -25,7 +26,7 @@ export default function ReportView({ sets, onBack }) {
       <main className="content">
         {sets.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">&#9827;</div>
+            <div className="empty-icon"><TradingCardIcon size={64} /></div>
             <p>No card sets yet. Add some sets first.</p>
           </div>
         ) : (

@@ -37,9 +37,9 @@
   gap: 14px;
 }
 
-.card-icon {
-  font-size: 40px;
-  line-height: 1;
+.card-icon-svg {
+  color: #fff;
+  flex-shrink: 0;
 }
 
 .header-title h1 {
@@ -534,7 +534,7 @@
   color: var(--text-muted);
 }
 .empty-state.small { padding: 28px 16px; }
-.empty-icon { font-size: 56px; margin-bottom: 14px; opacity: 0.25; }
+.empty-icon { margin-bottom: 14px; opacity: 0.25; display: flex; justify-content: center; color: var(--text-strong); }
 .empty-state p { font-size: 16px; line-height: 1.6; }
 
 /* ─────────────────────────────────────
