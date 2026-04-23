@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import SetList from './components/SetList'
 import SetDetail from './components/SetDetail'
+import ReportView from './components/ReportView'
 import './App.css'
 
 const STORAGE_KEY = 'card-collector-sets'
@@ -20,6 +21,7 @@ function loadSets() {
 
 export default function App() {
   const [sets, setSets] = useState(loadSets)
+  const [view, setView] = useState('home') // 'home' | 'detail' | 'reports'
   const [activeSetId, setActiveSetId] = useState(null)
 
   useEffect(() => {
@@ -67,11 +69,15 @@ export default function App() {
     ))
   }
 
-  if (activeSet) {
+  if (view === 'reports') {
+    return <ReportView sets={sets} onBack={() => setView('home')} />
+  }
+
+  if (view === 'detail' && activeSet) {
     return (
       <SetDetail
         set={activeSet}
-        onBack={() => setActiveSetId(null)}
+        onBack={() => { setView('home'); setActiveSetId(null) }}
         onAddCard={(number, player) => addCard(activeSet.id, number, player)}
         onToggleOwned={cardId => toggleOwned(activeSet.id, cardId)}
         onDeleteCard={cardId => deleteCard(activeSet.id, cardId)}
@@ -83,8 +89,9 @@ export default function App() {
     <SetList
       sets={sets}
       onAddSet={addSet}
-      onSelectSet={setActiveSetId}
+      onSelectSet={id => { setActiveSetId(id); setView('detail') }}
       onDeleteSet={deleteSet}
+      onOpenReports={() => setView('reports')}
     />
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet }) {
+export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onOpenReports }) {
   const [showForm, setShowForm] = useState(false)
   const [brand, setBrand] = useState('')
   const [year, setYear] = useState('')
@@ -29,9 +29,14 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet }) {
       <main className="content">
         <div className="section-header">
           <h2>My Card Sets</h2>
-          <button className="btn btn-primary" onClick={() => setShowForm(v => !v)}>
-            {showForm ? 'Cancel' : '+ Add Set'}
-          </button>
+          <div className="header-actions">
+            <button className="btn btn-secondary" onClick={onOpenReports}>
+              &#128438; Reports
+            </button>
+            <button className="btn btn-primary" onClick={() => setShowForm(v => !v)}>
+              {showForm ? 'Cancel' : '+ Add Set'}
+            </button>
+          </div>
         </div>
 
         {showForm && (
