@@ -1,9 +1,7 @@
 import * as pdfjsLib from 'pdfjs-dist'
+import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).href
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc
 
 export async function extractTextFromPdf(file) {
   const buffer = await file.arrayBuffer()
@@ -18,15 +16,14 @@ export async function extractTextFromPdf(file) {
     // to handle minor float differences in items on the same line
     const lineMap = new Map()
     for (const item of content.items) {
-      if (!item.str?.trim()) continue
+      if (!item.str?.trim() || !item.transform) continue
       const y = Math.round(item.transform[5] / 2) * 2
       if (!lineMap.has(y)) lineMap.set(y, [])
       lineMap.get(y).push({
         x: item.transform[4],
         str: item.str,
-        // item.width is the advance width in user space; fall back to
-        // a character-count estimate when not available
-        width: item.width > 0 ? item.width : item.str.length * 5
+        // item.width is advance width in user space; estimate if zero
+        width: (item.width > 0) ? item.width : item.str.length * 5
       })
     }
 
@@ -36,27 +33,25 @@ export async function extractTextFromPdf(file) {
     for (const [, items] of sortedLines) {
       items.sort((a, b) => a.x - b.x)
 
-      if (items.length <= 1) {
-        fullText += (items[0]?.str ?? '').trim() + '\n'
+      if (items.length === 1) {
+        fullText += items[0].str.trim() + '\n'
         continue
       }
 
-      // Calculate the gap between each consecutive pair of items.
-      // Gap = distance from the RIGHT edge of item[i] to the LEFT edge of item[i+1].
+      // Calculate gap between the right edge of item[i] and left edge of item[i+1]
       const gaps = items.slice(1).map((item, i) =>
         item.x - (items[i].x + items[i].width)
       )
 
-      // Use the median positive gap as the baseline "normal" word spacing.
-      // A gap much larger than the median signals a column boundary.
+      // Median positive gap = baseline word spacing on this row
       const positiveGaps = gaps.filter(g => g > 0).sort((a, b) => a - b)
       const median = positiveGaps.length
         ? positiveGaps[Math.floor(positiveGaps.length / 2)]
         : 0
-      // Column gap threshold: at least 4× the median word gap, and at least 10 units
+      // A gap >= 4× the median (and at least 10 units) signals a column boundary
       const columnThreshold = Math.max(median * 4, 10)
 
-      // Rebuild the row, inserting a newline wherever a column gap is detected
+      // Rebuild the row, inserting a newline at each column boundary
       let segment = items[0].str
       for (let i = 1; i < items.length; i++) {
         if (gaps[i - 1] > columnThreshold) {
