@@ -69,7 +69,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
       }
       return a.player.localeCompare(b.player)
     })
-  }, [set.cards, filter, sortBy])
+  }, [set.cards, filter, sortBy, search])
 
   function handleSubmit(e) {
     e.preventDefault()
