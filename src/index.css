@@ -1,34 +1,43 @@
 :root {
-  /* Brand colors */
-  --navy: #1a3a5c;
-  --navy-hover: #14304e;
-  --navy-pale: rgba(26, 58, 92, 0.1);
-  --gold: #c9a227;
+  /* Primary accent */
+  --navy: #4f8ef7;
+  --navy-hover: #3b7ef5;
+  --navy-pale: rgba(79, 142, 247, 0.15);
+  --navy-gradient: linear-gradient(135deg, #4f8ef7 0%, #7c3aed 100%);
 
-  /* Status colors */
-  --have: #1a7a3f;
-  --have-pale: rgba(26, 122, 63, 0.12);
-  --need: #c0392b;
-  --need-pale: rgba(192, 57, 43, 0.12);
-  --danger: #c0392b;
-  --danger-pale: rgba(192, 57, 43, 0.1);
+  /* Gold */
+  --gold: #f59e0b;
 
-  /* Neutrals */
-  --bg: #f5f5f0;
-  --surface: #ffffff;
-  --surface-alt: #f0f0eb;
-  --border: #d8d8d0;
-  --text-strong: #1a1a1a;
-  --text: #444444;
-  --text-muted: #777777;
+  /* Status */
+  --have: #10b981;
+  --have-pale: rgba(16, 185, 129, 0.15);
+  --need: #f43f5e;
+  --need-pale: rgba(244, 63, 94, 0.15);
+  --danger: #f43f5e;
+  --danger-pale: rgba(244, 63, 94, 0.12);
 
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-  font-size: 17px;
+  /* Surfaces */
+  --bg: #0c1a2e;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-solid: #152035;
+  --surface-alt: rgba(255, 255, 255, 0.03);
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  /* Text */
+  --text-strong: #e2e8f0;
+  --text: #94a3b8;
+  --text-muted: #64748b;
+
+  font-family: system-ui, -apple-system, 'Segoe UI Variable', 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -36,16 +45,21 @@
 body {
   margin: 0;
   padding: 0;
-}
-
-#root {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% -5%, rgba(79, 142, 247, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 105%, rgba(124, 58, 237, 0.12) 0%, transparent 55%);
+  background-attachment: fixed;
   min-height: 100svh;
 }
 
+#root { min-height: 100svh; }
+
 h1, h2, h3 {
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-strong);
   margin: 0;
+  letter-spacing: -0.3px;
 }
 
 p { margin: 0; }
