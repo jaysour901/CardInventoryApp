@@ -726,6 +726,26 @@
 }
 
 /* ─────────────────────────────────────
+   Report: filter bar (screen only)
+───────────────────────────────────── */
+.report-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.report-filter-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────
    Report: printable page
 ───────────────────────────────────── */
 .report-page {
