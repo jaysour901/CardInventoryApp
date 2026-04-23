@@ -1,0 +1,602 @@
+/* ─────────────────────────────────────
+   Layout
+───────────────────────────────────── */
+.page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.content {
+  flex: 1;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+/* ─────────────────────────────────────
+   Header
+───────────────────────────────────── */
+.app-header {
+  background: var(--navy);
+  color: #fff;
+  border-bottom: 5px solid var(--gold);
+}
+
+.header-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 16px 18px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.card-icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.header-sub {
+  margin: 8px 0 0;
+  font-size: 15px;
+  color: rgba(255,255,255,0.70);
+}
+
+/* ─────────────────────────────────────
+   Back button & set title
+───────────────────────────────────── */
+.back-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 18px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+  min-height: 44px;
+}
+.back-btn:hover { background: rgba(255,255,255,0.25); }
+
+.set-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.set-year-lg {
+  font-size: 22px;
+  color: var(--gold);
+  font-weight: 700;
+}
+.set-title h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #fff;
+}
+
+/* ─────────────────────────────────────
+   Section header row
+───────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.section-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+/* ─────────────────────────────────────
+   Card surface
+───────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.07);
+}
+
+/* ─────────────────────────────────────
+   Buttons
+───────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 20px;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  min-height: 46px; /* accessible touch target */
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--navy-hover);
+  border-color: var(--navy-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--navy);
+  border-color: var(--navy);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--navy-pale);
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+  min-width: 38px; /* large touch target */
+}
+.btn-icon:hover { background: var(--danger-pale); color: var(--danger); }
+
+/* ─────────────────────────────────────
+   Add form
+───────────────────────────────────── */
+.add-form {
+  padding: 20px;
+  margin-bottom: 18px;
+}
+.add-form h3 {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 200px;
+}
+.form-group.narrow { flex: 0 0 110px; }
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 16px;   /* 16px prevents iOS zoom */
+  color: var(--text-strong);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-height: 48px;  /* comfortable tap target */
+}
+.form-group input:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px var(--navy-pale);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────
+   Set list (home screen)
+───────────────────────────────────── */
+.set-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.set-card {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+.set-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+
+.set-card-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+  flex-wrap: wrap;
+  min-height: 80px; /* generous touch target */
+}
+
+.set-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 80px;
+}
+.set-year {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1;
+}
+.set-brand {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.set-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 120px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-bar.large { height: 12px; }
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy) 0%, var(--gold) 100%);
+  border-radius: 99px;
+  transition: width 0.35s ease;
+  min-width: 4px;
+}
+
+.progress-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.dim { opacity: 0.7; }
+
+.set-badges {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.no-cards {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────────────
+   Summary bar (set detail)
+───────────────────────────────────── */
+.summary-bar {
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+.summary-numbers {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.stat-val {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-strong);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.summary-stat.have .stat-val { color: var(--have); }
+.summary-stat.need .stat-val { color: var(--need); }
+.summary-stat.pct  .stat-val { color: var(--navy); }
+
+/* ─────────────────────────────────────
+   Filter tabs
+───────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-alt);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.filter-tab {
+  background: none;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.15s, color 0.15s;
+  min-height: 42px;  /* touch-friendly */
+}
+.filter-tab:hover { color: var(--text-strong); }
+.filter-tab.active {
+  background: var(--surface);
+  color: var(--navy);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+}
+
+.tab-count {
+  background: var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 1px 7px;
+  border-radius: 99px;
+  font-weight: 700;
+}
+.filter-tab.active .tab-count {
+  background: var(--navy-pale);
+  color: var(--navy);
+}
+
+/* ─────────────────────────────────────
+   Toolbar right
+───────────────────────────────────── */
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sort-select {
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text-strong);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  min-height: 44px;
+}
+.sort-select:focus { border-color: var(--navy); }
+
+/* ─────────────────────────────────────
+   Card list (set detail)
+───────────────────────────────────── */
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-item {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding-right: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.card-item:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.card-item.owned  { border-left: 5px solid var(--have); }
+.card-item.needed { border-left: 5px solid var(--need); }
+
+.card-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 12px;
+  cursor: pointer;
+  min-width: 0;
+  min-height: 56px; /* comfortable tap target */
+}
+
+.card-checkbox {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--navy);
+  flex-shrink: 0;
+}
+
+.card-number {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-muted);
+  min-width: 48px;
+  flex-shrink: 0;
+}
+
+.card-player {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-strong);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────
+   Badges & pills
+───────────────────────────────────── */
+.badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+.badge-have { background: var(--have-pale); color: var(--have); }
+.badge-need { background: var(--need-pale); color: var(--need); }
+
+.status-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.status-pill.have { background: var(--have-pale); color: var(--have); }
+.status-pill.need { background: var(--need-pale); color: var(--need); }
+
+/* ─────────────────────────────────────
+   Empty state
+───────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 56px 16px;
+  color: var(--text-muted);
+}
+.empty-state.small { padding: 28px 16px; }
+.empty-icon { font-size: 56px; margin-bottom: 14px; opacity: 0.25; }
+.empty-state p { font-size: 16px; line-height: 1.6; }
+
+/* ─────────────────────────────────────
+   Delete button placement
+───────────────────────────────────── */
+.set-card .delete-btn {
+  margin: 10px 10px 10px 0;
+  align-self: center;
+}
+
+/* ─────────────────────────────────────
+   Mobile responsive (phones)
+───────────────────────────────────── */
+@media (max-width: 600px) {
+  .header-title h1 { font-size: 24px; }
+  .header-sub { font-size: 14px; }
+  .card-icon { font-size: 32px; }
+
+  .set-title h1 { font-size: 24px; }
+  .set-year-lg { font-size: 18px; }
+
+  .set-card-body {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .set-badges { display: none; } /* hidden on small screens; info is in stats */
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-tabs {
+    width: 100%;
+  }
+  .filter-tab {
+    flex: 1;
+    justify-content: center;
+    padding: 9px 8px;
+    font-size: 13px;
+  }
+
+  .toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .form-group.narrow { flex: 0 0 90px; }
+
+  .form-actions {
+    flex-direction: column;
+  }
+  .form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .summary-numbers { gap: 18px; }
+  .stat-val { font-size: 22px; }
+
+  .card-player { font-size: 15px; }
+
+  .btn { font-size: 15px; }
+}
