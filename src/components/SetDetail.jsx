@@ -141,7 +141,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           </div>
         </div>
 
-        <div className="section-header no-print">
+        <div className="section-header-stack no-print">
           <div className="filter-tabs">
             {FILTERS.map(f => (
               <button
@@ -156,24 +156,31 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
               </button>
             ))}
           </div>
-          <div className="toolbar-right">
-            {total > 1 && (
-              <select
-                className="sort-select"
-                value={sortBy}
-                onChange={e => setSortBy(e.target.value)}
-                aria-label="Sort cards by"
-              >
-                <option value="number">Sort: # Number</option>
-                <option value="player">Sort: Player</option>
-              </select>
+          <div className="toolbar-row">
+            <div className="toolbar-left">
+              {total > 1 && (
+                <select
+                  className="sort-select"
+                  value={sortBy}
+                  onChange={e => setSortBy(e.target.value)}
+                  aria-label="Sort cards by"
+                >
+                  <option value="number">Sort: # Number</option>
+                  <option value="player">Sort: Player</option>
+                </select>
+              )}
+              <button className="btn btn-secondary" onClick={openBulk}>
+                &#128203; Bulk Import
+              </button>
+              <button className="btn btn-primary" onClick={openForm}>
+                {showForm ? 'Cancel' : '+ Add Card'}
+              </button>
+            </div>
+            {total > 0 && (
+              <button className="btn btn-secondary btn-sm" onClick={() => window.print()}>
+                &#128438; Print
+              </button>
             )}
-            <button className="btn btn-secondary" onClick={openBulk}>
-              &#128203; Bulk Import
-            </button>
-            <button className="btn btn-primary" onClick={openForm}>
-              {showForm ? 'Cancel' : '+ Add Card'}
-            </button>
           </div>
         </div>
 
@@ -285,15 +292,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
             <p>No cards match this filter.</p>
           </div>
         ) : (
-          <>
-            {total > 0 && (
-              <div className="list-toolbar no-print">
-                <button className="btn btn-secondary btn-sm" onClick={() => window.print()}>
-                  &#128438; Print
-                </button>
-              </div>
-            )}
-            <ul className="card-list">
+          <ul className="card-list">
             {visibleCards.map(card => {
               const copies = card.copies ?? (card.owned ? 1 : 0)
               return (
@@ -339,7 +338,6 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
               )
             })}
           </ul>
-          </>
         )}
       </main>
 

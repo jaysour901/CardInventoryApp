@@ -476,12 +476,27 @@
 .sort-select option { background: #152035; color: var(--text-strong); }
 
 /* ─────────────────────────────────────
-   List toolbar (print button above list)
+   Section header stack (filters + toolbar)
 ───────────────────────────────────── */
-.list-toolbar {
+.section-header-stack {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 /* ─────────────────────────────────────
