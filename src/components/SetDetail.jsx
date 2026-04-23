@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo } from 'react'
 
 const FILTERS = ['All', 'Have', 'Need']
 
@@ -19,15 +19,10 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
   const [showBulk, setShowBulk] = useState(false)
-  const [bulkMode, setBulkMode] = useState('paste') // 'paste' | 'pdf'
   const [number, setNumber] = useState('')
   const [player, setPlayer] = useState('')
   const [pasteText, setPasteText] = useState('')
   const [sortBy, setSortBy] = useState('number')
-  const [pdfStatus, setPdfStatus] = useState('idle') // 'idle' | 'loading' | 'done' | 'error'
-  const [pdfFileName, setPdfFileName] = useState('')
-  const [pdfError, setPdfError] = useState('')
-  const fileInputRef = useRef(null)
   const [importDone, setImportDone] = useState(null)
 
   const total = set.cards.length
@@ -79,29 +74,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
     onBulkAddCards(newCards)
     setImportDone(newCards.length)
     setPasteText('')
-    setPdfStatus('idle')
-    setPdfFileName('')
     setTimeout(() => { setImportDone(null); setShowBulk(false) }, 2500)
-  }
-
-  async function handlePdfUpload(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setPdfFileName(file.name)
-    setPdfStatus('loading')
-    setPasteText('')
-    setPdfError('')
-    try {
-      const { extractTextFromPdf } = await import('../utils/pdfExtract.js')
-      const text = await extractTextFromPdf(file)
-      setPasteText(text)
-      setPdfStatus('done')
-    } catch (err) {
-      setPdfStatus('error')
-      setPdfError('Could not read this PDF. Make sure it is a text-based PDF (not a scanned image).')
-    }
-    // Reset input so same file can be re-uploaded if needed
-    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   function openBulk() {
@@ -109,9 +82,6 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
     setShowForm(false)
     setPasteText('')
     setImportDone(null)
-    setPdfStatus('idle')
-    setPdfFileName('')
-    setPdfError('')
   }
 
   function openForm() {
@@ -203,77 +173,16 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
               <button className="btn-icon" onClick={() => setShowBulk(false)} aria-label="Close">&#10005;</button>
             </div>
 
-            {/* Mode tabs */}
-            <div className="bulk-mode-tabs">
-              <button
-                className={`bulk-mode-tab${bulkMode === 'paste' ? ' active' : ''}`}
-                onClick={() => { setBulkMode('paste'); setPasteText(''); setPdfStatus('idle'); setPdfFileName('') }}
-              >
-                &#128203; Paste Text
-              </button>
-              <button
-                className={`bulk-mode-tab${bulkMode === 'pdf' ? ' active' : ''}`}
-                onClick={() => { setBulkMode('pdf'); setPasteText(''); setPdfStatus('idle'); setPdfFileName('') }}
-              >
-                &#128196; Upload PDF
-              </button>
-            </div>
-
-            {bulkMode === 'paste' ? (
-              <>
-                <p className="bulk-hint">
-                  Paste a checklist below. Each line should start with a card number followed by the player name — extra tags like RC, MGR, UER are kept as part of the name.
-                </p>
-                <textarea
-                  className="bulk-textarea"
-                  placeholder={"12 National League 1964 Str LL\n70 Bill Skowron\n127 Frank Lary\n185 Max Alvis RC\n..."}
-                  value={pasteText}
+            <p className="bulk-hint">
+              Paste a checklist below. Each line should start with a card number followed by the player name — extra tags like RC, MGR, UER are kept as part of the name.
+            </p>
+            <textarea
+              className="bulk-textarea"
+              placeholder={"12 National League 1964 Str LL\n70 Bill Skowron\n127 Frank Lary\n185 Max Alvis RC\n..."}
+              value={pasteText}
               onChange={e => { setPasteText(e.target.value); setImportDone(null) }}
               rows={10}
-                />
-              </>
-            ) : (
-              /* PDF upload mode */
-              <>
-                <p className="bulk-hint">
-                  Upload a checklist PDF from TCDB or similar. The text will be extracted automatically — works with any PDF where the text is selectable.
-                </p>
-                <div className="pdf-upload-area">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".pdf,application/pdf"
-                    id="pdf-file-input"
-                    className="pdf-file-input"
-                    onChange={handlePdfUpload}
-                  />
-                  <label htmlFor="pdf-file-input" className="pdf-upload-label">
-                    {pdfStatus === 'loading' ? (
-                      <span className="pdf-loading">&#8987; Reading PDF...</span>
-                    ) : pdfStatus === 'done' ? (
-                      <span className="pdf-done">&#10003; {pdfFileName}</span>
-                    ) : (
-                      <>
-                        <span className="pdf-icon">&#128196;</span>
-                        <span className="pdf-upload-text">Tap to choose a PDF file</span>
-                      </>
-                    )}
-                  </label>
-                  {pdfStatus === 'error' && (
-                    <p className="pdf-error">{pdfError}</p>
-                  )}
-                  {pdfStatus === 'done' && (
-                    <button
-                      className="btn btn-secondary pdf-reselect"
-                      onClick={() => { fileInputRef.current?.click() }}
-                      type="button"
-                    >
-                      Choose a different file
-                    </button>
-                  )}
-                </div>
-              </>
-            )}
+            />
 
             {parsedCards.length > 0 && (
               <div className="bulk-preview">
@@ -296,7 +205,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
               <button
                 className="btn btn-primary"
                 onClick={handleBulkImport}
-                disabled={newCards.length === 0 || pdfStatus === 'loading'}
+                disabled={newCards.length === 0}
               >
                 Import {newCards.length > 0 ? `${newCards.length} ` : ''}Cards
               </button>
