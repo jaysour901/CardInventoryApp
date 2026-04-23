@@ -174,11 +174,6 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
             <button className="btn btn-primary" onClick={openForm}>
               {showForm ? 'Cancel' : '+ Add Card'}
             </button>
-            {total > 0 && (
-              <button className="btn btn-secondary" onClick={() => window.print()}>
-                &#128438; Print
-              </button>
-            )}
           </div>
         </div>
 
@@ -291,7 +286,14 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           </div>
         ) : (
           <>
-          <ul className="card-list">
+            {total > 0 && (
+              <div className="list-toolbar no-print">
+                <button className="btn btn-secondary btn-sm" onClick={() => window.print()}>
+                  &#128438; Print
+                </button>
+              </div>
+            )}
+            <ul className="card-list">
             {visibleCards.map(card => {
               const copies = card.copies ?? (card.owned ? 1 : 0)
               return (
