@@ -35,6 +35,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
   const [importDone, setImportDone] = useState(null)
   const [showTutorial, setShowTutorial] = useState(false)
   const [expandedCardId, setExpandedCardId] = useState(null)
+  const [search, setSearch] = useState('')
 
   const total = set.cards.length
   const owned = set.cards.filter(c => c.owned).length
@@ -53,6 +54,12 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
     let cards = set.cards
     if (filter === 'Have') cards = cards.filter(c => c.owned)
     if (filter === 'Need') cards = cards.filter(c => !c.owned)
+    if (search.trim()) {
+      const q = search.trim().toLowerCase()
+      cards = cards.filter(c =>
+        c.player.toLowerCase().includes(q) || c.number.toLowerCase().includes(q)
+      )
+    }
     return [...cards].sort((a, b) => {
       if (sortBy === 'number') {
         const na = parseInt(a.number, 10)
@@ -165,6 +172,31 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
               </button>
             ))}
           </div>
+
+          {total > 0 && (
+            <div className="search-row">
+              <div className="search-wrap">
+                <span className="search-icon">&#128269;</span>
+                <input
+                  className="search-input"
+                  type="search"
+                  placeholder="Search by player or card #…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  aria-label="Search cards"
+                />
+                {search && (
+                  <button className="search-clear" onClick={() => setSearch('')} aria-label="Clear search">&#10005;</button>
+                )}
+              </div>
+              {search.trim() && (
+                <span className="search-results-count">
+                  {visibleCards.length} result{visibleCards.length !== 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
+          )}
+
           <div className="toolbar-row">
             <div className="toolbar-left">
               {total > 1 && (
