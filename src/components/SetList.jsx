@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import TradingCardIcon from './TradingCardIcon'
 
-export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onOpenReports }) {
+export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onPrintSet }) {
   const [showForm, setShowForm] = useState(false)
   const [brand, setBrand] = useState('')
   const [year, setYear] = useState('')
@@ -31,9 +31,6 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onOp
         <div className="section-header">
           <h2>My Card Sets</h2>
           <div className="header-actions">
-            <button className="btn btn-secondary" onClick={onOpenReports}>
-              &#128438; Reports
-            </button>
             <button className="btn btn-primary" onClick={() => setShowForm(v => !v)}>
               {showForm ? 'Cancel' : '+ Add Set'}
             </button>
@@ -116,14 +113,24 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onOp
                       )}
                     </div>
                   </button>
-                  <button
-                    className="btn-icon delete-btn"
-                    onClick={e => { e.stopPropagation(); onDeleteSet(set.id) }}
-                    title="Delete set"
-                    aria-label={`Delete ${set.year} ${set.brand}`}
-                  >
-                    &#10005;
-                  </button>
+                  <div className="set-card-actions">
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={e => { e.stopPropagation(); onPrintSet(set.id) }}
+                      title="Print / Save PDF"
+                      aria-label={`Print ${set.year} ${set.brand}`}
+                    >
+                      &#128438; Print
+                    </button>
+                    <button
+                      className="btn-icon delete-btn"
+                      onClick={e => { e.stopPropagation(); onDeleteSet(set.id) }}
+                      title="Delete set"
+                      aria-label={`Delete ${set.year} ${set.brand}`}
+                    >
+                      &#10005;
+                    </button>
+                  </div>
                 </li>
               )
             })}

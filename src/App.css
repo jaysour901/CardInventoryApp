@@ -583,11 +583,21 @@
 }
 
 /* ─────────────────────────────────────
-   Delete button placement
+   Set card actions (print + delete)
 ───────────────────────────────────── */
-.set-card .delete-btn {
-  margin: 10px 10px 10px 0;
+.set-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px 0 0;
+  flex-shrink: 0;
   align-self: center;
+}
+
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 13px;
+  min-height: 38px;
 }
 
 /* ─────────────────────────────────────
