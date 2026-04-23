@@ -75,6 +75,15 @@ export default function App() {
     ))
   }
 
+  function updateCard(setId, cardId, updates) {
+    setSets(prev => prev.map(s =>
+      s.id !== setId ? s : {
+        ...s,
+        cards: s.cards.map(c => c.id === cardId ? { ...c, ...updates } : c)
+      }
+    ))
+  }
+
   function deleteCard(setId, cardId) {
     setSets(prev => prev.map(s =>
       s.id !== setId ? s : { ...s, cards: s.cards.filter(c => c.id !== cardId) }
@@ -102,6 +111,7 @@ export default function App() {
         onBulkAddCards={cards => bulkAddCards(activeSet.id, cards)}
         onToggleOwned={cardId => toggleOwned(activeSet.id, cardId)}
         onUpdateCopies={(cardId, count) => updateCopies(activeSet.id, cardId, count)}
+        onUpdateCard={(cardId, updates) => updateCard(activeSet.id, cardId, updates)}
         onDeleteCard={cardId => deleteCard(activeSet.id, cardId)}
       />
     )

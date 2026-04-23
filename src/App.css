@@ -513,11 +513,10 @@
 
 .card-item {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding-right: 8px;
   transition: background 0.2s, border-color 0.2s;
 }
 .card-item:hover {
@@ -526,6 +525,14 @@
 }
 .card-item.owned  { border-left: 3px solid var(--have); }
 .card-item.needed { border-left: 3px solid rgba(244, 63, 94, 0.5); }
+.card-item.expanded { border-color: rgba(79, 142, 247, 0.3); }
+
+.card-item-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-right: 8px;
+}
 
 .card-label {
   flex: 1;
@@ -555,11 +562,26 @@
   flex-shrink: 0;
 }
 
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
 .card-player {
   font-size: 15px;
   font-weight: 600;
   color: var(--text-strong);
-  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-notes {
+  font-size: 12px;
+  color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -906,6 +928,85 @@
   display: flex;
   justify-content: center;
 }
+
+/* ─────────────────────────────────────
+   Edit / Delete button hover overrides
+───────────────────────────────────── */
+.edit-btn:hover { background: rgba(79, 142, 247, 0.15); color: var(--navy); }
+.delete-btn:hover { background: rgba(244, 63, 94, 0.15); color: var(--need); }
+
+/* ─────────────────────────────────────
+   Condition badges
+───────────────────────────────────── */
+.condition-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  flex-shrink: 0;
+  letter-spacing: 0.2px;
+}
+.cond-raw   { background: rgba(148,163,184,0.15); color: #94a3b8; }
+.cond-good  { background: rgba(251,191, 36,0.15); color: #fbbf24; }
+.cond-vg    { background: rgba(251,146, 60,0.15); color: #fb923c; }
+.cond-ex    { background: rgba( 56,189,248,0.15); color: #38bdf8; }
+.cond-nm    { background: rgba( 52,211,153,0.15); color: #34d399; }
+.cond-nmmt  { background: rgba( 16,185,129,0.18); color: #10b981; }
+.cond-mint  { background: rgba(245,158, 11,0.18); color: #f59e0b; }
+.cond-graded { background: rgba(167,139,250,0.18); color: #a78bfa; }
+
+/* ─────────────────────────────────────
+   Inline card edit panel
+───────────────────────────────────── */
+.card-edit-panel {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 12px 14px 14px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 0 0 12px 12px;
+}
+
+.card-edit-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.card-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 0 0 160px;
+}
+.card-edit-field.card-edit-notes { flex: 1 1 200px; }
+
+.card-edit-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.card-edit-select,
+.card-edit-input {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text-strong);
+  background: rgba(255, 255, 255, 0.05);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 40px;
+  width: 100%;
+}
+.card-edit-select:focus,
+.card-edit-input:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px var(--navy-pale);
+}
+.card-edit-select option { background: #152035; color: var(--text-strong); }
+.card-edit-input::placeholder { color: var(--text-muted); opacity: 0.6; }
 
 /* ─────────────────────────────────────
    Mobile responsive

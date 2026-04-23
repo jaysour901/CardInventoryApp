@@ -3,6 +3,14 @@ import TutorialModal from './TutorialModal'
 
 const FILTERS = ['All', 'Have', 'Need']
 
+const CONDITIONS = ['', 'Raw', 'Good', 'VG', 'EX', 'NM', 'NM-MT', 'Mint', 'Graded']
+
+const CONDITION_CLASS = {
+  'Raw': 'cond-raw', 'Good': 'cond-good', 'VG': 'cond-vg',
+  'EX': 'cond-ex', 'NM': 'cond-nm', 'NM-MT': 'cond-nmmt',
+  'Mint': 'cond-mint', 'Graded': 'cond-graded',
+}
+
 function parsePaste(text) {
   return text
     .split('\n')
@@ -16,7 +24,7 @@ function parsePaste(text) {
     .filter(Boolean)
 }
 
-export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onDeleteCard }) {
+export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onUpdateCard, onDeleteCard }) {
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
   const [showBulk, setShowBulk] = useState(false)
@@ -26,6 +34,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
   const [sortBy, setSortBy] = useState('number')
   const [importDone, setImportDone] = useState(null)
   const [showTutorial, setShowTutorial] = useState(false)
+  const [expandedCardId, setExpandedCardId] = useState(null)
 
   const total = set.cards.length
   const owned = set.cards.filter(c => c.owned).length
@@ -295,45 +304,87 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           <ul className="card-list">
             {visibleCards.map(card => {
               const copies = card.copies ?? (card.owned ? 1 : 0)
+              const condition = card.condition || ''
+              const notes = card.notes || ''
+              const isExpanded = expandedCardId === card.id
               return (
-                <li key={card.id} className={`card-item${card.owned ? ' owned' : ' needed'}`}>
-                  <label className="card-label">
-                    <input
-                      type="checkbox"
-                      checked={card.owned}
-                      onChange={() => onToggleOwned(card.id)}
-                      className="card-checkbox no-print"
-                    />
-                    <span className="card-number">#{card.number}</span>
-                    <span className="card-player">{card.player}</span>
-                    <span className={`status-pill ${card.owned ? 'have' : 'need'} no-print`}>
-                      {card.owned ? 'Have' : 'Need'}
-                    </span>
-                  </label>
-                  {card.owned && (
-                    <div className="copies-stepper no-print" onClick={e => e.stopPropagation()}>
-                      <button
-                        className="copies-btn"
-                        onClick={() => onUpdateCopies(card.id, copies - 1)}
-                        disabled={copies <= 1}
-                        aria-label="Remove one copy"
-                      >&#8722;</button>
-                      <span className="copies-count">{copies}</span>
-                      <button
-                        className="copies-btn"
-                        onClick={() => onUpdateCopies(card.id, copies + 1)}
-                        aria-label="Add one copy"
-                      >&#43;</button>
+                <li key={card.id} className={`card-item${card.owned ? ' owned' : ' needed'}${isExpanded ? ' expanded' : ''}`}>
+                  <div className="card-item-row">
+                    <label className="card-label">
+                      <input
+                        type="checkbox"
+                        checked={card.owned}
+                        onChange={() => onToggleOwned(card.id)}
+                        className="card-checkbox no-print"
+                      />
+                      <span className="card-number">#{card.number}</span>
+                      <div className="card-info">
+                        <span className="card-player">{card.player}</span>
+                        {notes && <span className="card-notes">{notes}</span>}
+                      </div>
+                      {condition && (
+                        <span className={`condition-badge ${CONDITION_CLASS[condition] || ''} no-print`}>
+                          {condition}
+                        </span>
+                      )}
+                      <span className={`status-pill ${card.owned ? 'have' : 'need'} no-print`}>
+                        {card.owned ? 'Have' : 'Need'}
+                      </span>
+                    </label>
+                    {card.owned && (
+                      <div className="copies-stepper no-print" onClick={e => e.stopPropagation()}>
+                        <button className="copies-btn" onClick={() => onUpdateCopies(card.id, copies - 1)} disabled={copies <= 1} aria-label="Remove one copy">&#8722;</button>
+                        <span className="copies-count">{copies}</span>
+                        <button className="copies-btn" onClick={() => onUpdateCopies(card.id, copies + 1)} aria-label="Add one copy">&#43;</button>
+                      </div>
+                    )}
+                    <button
+                      className="btn-icon edit-btn no-print"
+                      onClick={() => setExpandedCardId(isExpanded ? null : card.id)}
+                      title="Edit condition / notes"
+                      aria-label="Edit card details"
+                    >
+                      &#9998;
+                    </button>
+                    <button
+                      className="btn-icon delete-btn no-print"
+                      onClick={() => onDeleteCard(card.id)}
+                      title="Remove card"
+                      aria-label={`Remove #${card.number} ${card.player}`}
+                    >
+                      &#10005;
+                    </button>
+                  </div>
+
+                  {isExpanded && (
+                    <div className="card-edit-panel no-print">
+                      <div className="card-edit-row">
+                        <div className="card-edit-field">
+                          <label className="card-edit-label">Condition</label>
+                          <select
+                            className="card-edit-select"
+                            value={condition}
+                            onChange={e => onUpdateCard(card.id, { condition: e.target.value })}
+                          >
+                            {CONDITIONS.map(c => (
+                              <option key={c} value={c}>{c || '— Not set —'}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="card-edit-field card-edit-notes">
+                          <label className="card-edit-label">Notes</label>
+                          <input
+                            type="text"
+                            className="card-edit-input"
+                            placeholder="e.g. PSA 8, from trade, needs centering…"
+                            value={notes}
+                            onChange={e => onUpdateCard(card.id, { notes: e.target.value })}
+                            maxLength={80}
+                          />
+                        </div>
+                      </div>
                     </div>
                   )}
-                  <button
-                    className="btn-icon delete-btn no-print"
-                    onClick={() => onDeleteCard(card.id)}
-                    title="Remove card"
-                    aria-label={`Remove #${card.number} ${card.player}`}
-                  >
-                    &#10005;
-                  </button>
                 </li>
               )
             })}
