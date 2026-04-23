@@ -668,6 +668,103 @@
 .bulk-skipped { color: var(--text-muted); }
 .bulk-new    { color: var(--have); }
 
+/* Bulk mode tabs (Paste / PDF) */
+.bulk-mode-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.bulk-mode-tab {
+  flex: 1;
+  background: var(--surface-alt);
+  border: none;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  min-height: 44px;
+}
+.bulk-mode-tab + .bulk-mode-tab {
+  border-left: 2px solid var(--border);
+}
+.bulk-mode-tab.active {
+  background: var(--navy);
+  color: #fff;
+}
+.bulk-mode-tab:not(.active):hover {
+  background: var(--border);
+  color: var(--text-strong);
+}
+
+/* PDF upload area */
+.pdf-upload-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.pdf-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.pdf-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 32px 20px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+  min-height: 120px;
+}
+.pdf-upload-label:hover {
+  border-color: var(--navy);
+  background: var(--navy-pale);
+}
+.pdf-icon { font-size: 36px; }
+.pdf-upload-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+}
+.pdf-loading {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.pdf-done {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--have);
+}
+.pdf-error {
+  font-size: 14px;
+  color: var(--danger);
+  background: var(--danger-pale);
+  border-radius: 7px;
+  padding: 10px 14px;
+  margin: 0;
+  font-weight: 600;
+}
+.pdf-reselect {
+  align-self: flex-start;
+  font-size: 13px;
+  padding: 8px 14px;
+  min-height: 38px;
+}
+
 .bulk-success {
   margin: 12px 0 0;
   background: var(--have-pale);
