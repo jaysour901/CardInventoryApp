@@ -69,6 +69,18 @@ export default function App() {
     ))
   }
 
+  function bulkAddCards(setId, cards) {
+    setSets(prev => prev.map(s =>
+      s.id !== setId ? s : {
+        ...s,
+        cards: [
+          ...s.cards,
+          ...cards.map(c => ({ id: generateId(), number: c.number, player: c.player, owned: false }))
+        ]
+      }
+    ))
+  }
+
   if (view === 'reports') {
     return <ReportView sets={sets} onBack={() => setView('home')} />
   }
@@ -79,6 +91,7 @@ export default function App() {
         set={activeSet}
         onBack={() => { setView('home'); setActiveSetId(null) }}
         onAddCard={(number, player) => addCard(activeSet.id, number, player)}
+        onBulkAddCards={cards => bulkAddCards(activeSet.id, cards)}
         onToggleOwned={cardId => toggleOwned(activeSet.id, cardId)}
         onDeleteCard={cardId => deleteCard(activeSet.id, cardId)}
       />

@@ -2,16 +2,41 @@ import { useState, useMemo } from 'react'
 
 const FILTERS = ['All', 'Have', 'Need']
 
-export default function SetDetail({ set, onBack, onAddCard, onToggleOwned, onDeleteCard }) {
+function parsePaste(text) {
+  return text
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => /^\d/.test(l))
+    .map(l => {
+      const spaceIdx = l.indexOf(' ')
+      if (spaceIdx === -1) return null
+      return { number: l.slice(0, spaceIdx), player: l.slice(spaceIdx + 1).trim() }
+    })
+    .filter(Boolean)
+}
+
+export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onToggleOwned, onDeleteCard }) {
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
+  const [showBulk, setShowBulk] = useState(false)
   const [number, setNumber] = useState('')
   const [player, setPlayer] = useState('')
+  const [pasteText, setPasteText] = useState('')
   const [sortBy, setSortBy] = useState('number')
+  const [importDone, setImportDone] = useState(null)
 
   const total = set.cards.length
   const owned = set.cards.filter(c => c.owned).length
   const pct = total === 0 ? 0 : Math.round((owned / total) * 100)
+
+  const existingNumbers = useMemo(() => new Set(set.cards.map(c => c.number)), [set.cards])
+
+  const parsedCards = useMemo(() => parsePaste(pasteText), [pasteText])
+  const newCards = useMemo(
+    () => parsedCards.filter(c => !existingNumbers.has(c.number)),
+    [parsedCards, existingNumbers]
+  )
+  const skipped = parsedCards.length - newCards.length
 
   const visibleCards = useMemo(() => {
     let cards = set.cards
@@ -42,6 +67,26 @@ export default function SetDetail({ set, onBack, onAddCard, onToggleOwned, onDel
     onAddCard(number, player)
     setNumber('')
     setPlayer('')
+  }
+
+  function handleBulkImport() {
+    if (newCards.length === 0) return
+    onBulkAddCards(newCards)
+    setImportDone(newCards.length)
+    setPasteText('')
+    setTimeout(() => { setImportDone(null); setShowBulk(false) }, 2500)
+  }
+
+  function openBulk() {
+    setShowBulk(true)
+    setShowForm(false)
+    setPasteText('')
+    setImportDone(null)
+  }
+
+  function openForm() {
+    setShowForm(v => !v)
+    setShowBulk(false)
   }
 
   return (
@@ -112,11 +157,60 @@ export default function SetDetail({ set, onBack, onAddCard, onToggleOwned, onDel
                 <option value="player">Sort: Player</option>
               </select>
             )}
-            <button className="btn btn-primary" onClick={() => setShowForm(v => !v)}>
+            <button className="btn btn-secondary" onClick={openBulk}>
+              &#128203; Bulk Import
+            </button>
+            <button className="btn btn-primary" onClick={openForm}>
               {showForm ? 'Cancel' : '+ Add Card'}
             </button>
           </div>
         </div>
+
+        {showBulk && (
+          <div className="bulk-panel card">
+            <div className="bulk-header">
+              <h3>Bulk Import from Checklist</h3>
+              <button className="btn-icon" onClick={() => setShowBulk(false)} aria-label="Close">&#10005;</button>
+            </div>
+            <p className="bulk-hint">
+              Paste a checklist below. Each line should start with a card number followed by the player name — extra tags like RC, MGR, UER are kept as part of the name.
+            </p>
+            <textarea
+              className="bulk-textarea"
+              placeholder={"12 National League 1964 Str LL\n70 Bill Skowron\n127 Frank Lary\n185 Max Alvis RC\n..."}
+              value={pasteText}
+              onChange={e => { setPasteText(e.target.value); setImportDone(null) }}
+              rows={10}
+            />
+
+            {parsedCards.length > 0 && (
+              <div className="bulk-preview">
+                <span className="bulk-found">&#10003; {parsedCards.length} cards found</span>
+                {skipped > 0 && (
+                  <span className="bulk-skipped">&nbsp;&middot;&nbsp; {skipped} already in set (will skip)</span>
+                )}
+                {newCards.length > 0 && (
+                  <span className="bulk-new">&nbsp;&middot;&nbsp; {newCards.length} will be added</span>
+                )}
+              </div>
+            )}
+
+            {importDone !== null && (
+              <div className="bulk-success">&#10003; {importDone} cards imported successfully!</div>
+            )}
+
+            <div className="form-actions">
+              <button className="btn btn-secondary" onClick={() => setShowBulk(false)}>Cancel</button>
+              <button
+                className="btn btn-primary"
+                onClick={handleBulkImport}
+                disabled={newCards.length === 0}
+              >
+                Import {newCards.length > 0 ? `${newCards.length} ` : ''}Cards
+              </button>
+            </div>
+          </div>
+        )}
 
         {showForm && (
           <form className="add-form card" onSubmit={handleSubmit}>
@@ -167,7 +261,7 @@ export default function SetDetail({ set, onBack, onAddCard, onToggleOwned, onDel
         {total === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">&#9827;</div>
-            <p>No cards in this set yet. Add your first card!</p>
+            <p>No cards in this set yet. Use <strong>Bulk Import</strong> to paste a checklist, or add cards one by one.</p>
           </div>
         ) : visibleCards.length === 0 ? (
           <div className="empty-state small">

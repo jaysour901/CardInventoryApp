@@ -608,6 +608,77 @@
 }
 
 /* ─────────────────────────────────────
+   Bulk Import panel
+───────────────────────────────────── */
+.bulk-panel {
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.bulk-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.bulk-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.bulk-hint {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+  line-height: 1.55;
+}
+
+.bulk-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: var(--mono, monospace);
+  color: var(--text-strong);
+  background: var(--bg);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  line-height: 1.6;
+}
+.bulk-textarea:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px var(--navy-pale);
+}
+
+.bulk-preview {
+  margin: 12px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  align-items: center;
+}
+.bulk-found  { color: var(--navy); }
+.bulk-skipped { color: var(--text-muted); }
+.bulk-new    { color: var(--have); }
+
+.bulk-success {
+  margin: 12px 0 0;
+  background: var(--have-pale);
+  color: var(--have);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 7px;
+}
+
+/* ─────────────────────────────────────
    Header actions row
 ───────────────────────────────────── */
 .header-actions {
