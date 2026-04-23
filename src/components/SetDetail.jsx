@@ -16,7 +16,7 @@ function parsePaste(text) {
     .filter(Boolean)
 }
 
-export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onToggleOwned, onDeleteCard }) {
+export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onDeleteCard }) {
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
   const [showBulk, setShowBulk] = useState(false)
@@ -277,31 +277,50 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           </div>
         ) : (
           <ul className="card-list">
-            {visibleCards.map(card => (
-              <li key={card.id} className={`card-item${card.owned ? ' owned' : ' needed'}`}>
-                <label className="card-label">
-                  <input
-                    type="checkbox"
-                    checked={card.owned}
-                    onChange={() => onToggleOwned(card.id)}
-                    className="card-checkbox"
-                  />
-                  <span className="card-number">#{card.number}</span>
-                  <span className="card-player">{card.player}</span>
-                  <span className={`status-pill ${card.owned ? 'have' : 'need'}`}>
-                    {card.owned ? 'Have' : 'Need'}
-                  </span>
-                </label>
-                <button
-                  className="btn-icon delete-btn"
-                  onClick={() => onDeleteCard(card.id)}
-                  title="Remove card"
-                  aria-label={`Remove #${card.number} ${card.player}`}
-                >
-                  &#10005;
-                </button>
-              </li>
-            ))}
+            {visibleCards.map(card => {
+              const copies = card.copies ?? (card.owned ? 1 : 0)
+              return (
+                <li key={card.id} className={`card-item${card.owned ? ' owned' : ' needed'}`}>
+                  <label className="card-label">
+                    <input
+                      type="checkbox"
+                      checked={card.owned}
+                      onChange={() => onToggleOwned(card.id)}
+                      className="card-checkbox"
+                    />
+                    <span className="card-number">#{card.number}</span>
+                    <span className="card-player">{card.player}</span>
+                    <span className={`status-pill ${card.owned ? 'have' : 'need'}`}>
+                      {card.owned ? 'Have' : 'Need'}
+                    </span>
+                  </label>
+                  {card.owned && (
+                    <div className="copies-stepper" onClick={e => e.stopPropagation()}>
+                      <button
+                        className="copies-btn"
+                        onClick={() => onUpdateCopies(card.id, copies - 1)}
+                        disabled={copies <= 1}
+                        aria-label="Remove one copy"
+                      >&#8722;</button>
+                      <span className="copies-count">{copies}</span>
+                      <button
+                        className="copies-btn"
+                        onClick={() => onUpdateCopies(card.id, copies + 1)}
+                        aria-label="Add one copy"
+                      >&#43;</button>
+                    </div>
+                  )}
+                  <button
+                    className="btn-icon delete-btn"
+                    onClick={() => onDeleteCard(card.id)}
+                    title="Remove card"
+                    aria-label={`Remove #${card.number} ${card.player}`}
+                  >
+                    &#10005;
+                  </button>
+                </li>
+              )
+            })}
           </ul>
         )}
       </main>

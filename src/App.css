@@ -538,6 +538,51 @@
 .empty-state p { font-size: 16px; line-height: 1.6; }
 
 /* ─────────────────────────────────────
+   Copies stepper
+───────────────────────────────────── */
+.copies-stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 0 8px;
+}
+
+.copies-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  border: 2px solid var(--navy);
+  background: transparent;
+  color: var(--navy);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+}
+.copies-btn:hover:not(:disabled) {
+  background: var(--navy);
+  color: #fff;
+}
+.copies-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.copies-count {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-strong);
+  min-width: 22px;
+  text-align: center;
+}
+
+/* ─────────────────────────────────────
    Delete button placement
 ───────────────────────────────────── */
 .set-card .delete-btn {

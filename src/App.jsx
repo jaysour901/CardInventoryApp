@@ -48,7 +48,7 @@ export default function App() {
         ...s,
         cards: [
           ...s.cards,
-          { id: generateId(), number: number.trim(), player: player.trim(), owned: false }
+          { id: generateId(), number: number.trim(), player: player.trim(), owned: false, copies: 0 }
         ]
       }
     ))
@@ -58,7 +58,20 @@ export default function App() {
     setSets(prev => prev.map(s =>
       s.id !== setId ? s : {
         ...s,
-        cards: s.cards.map(c => c.id === cardId ? { ...c, owned: !c.owned } : c)
+        cards: s.cards.map(c => {
+          if (c.id !== cardId) return c
+          const nowOwned = !c.owned
+          return { ...c, owned: nowOwned, copies: nowOwned ? Math.max(1, c.copies || 0) : 0 }
+        })
+      }
+    ))
+  }
+
+  function updateCopies(setId, cardId, newCount) {
+    setSets(prev => prev.map(s =>
+      s.id !== setId ? s : {
+        ...s,
+        cards: s.cards.map(c => c.id === cardId ? { ...c, copies: Math.max(1, newCount) } : c)
       }
     ))
   }
@@ -75,7 +88,7 @@ export default function App() {
         ...s,
         cards: [
           ...s.cards,
-          ...cards.map(c => ({ id: generateId(), number: c.number, player: c.player, owned: false }))
+          ...cards.map(c => ({ id: generateId(), number: c.number, player: c.player, owned: false, copies: 0 }))
         ]
       }
     ))
@@ -93,6 +106,7 @@ export default function App() {
         onAddCard={(number, player) => addCard(activeSet.id, number, player)}
         onBulkAddCards={cards => bulkAddCards(activeSet.id, cards)}
         onToggleOwned={cardId => toggleOwned(activeSet.id, cardId)}
+        onUpdateCopies={(cardId, count) => updateCopies(activeSet.id, cardId, count)}
         onDeleteCard={cardId => deleteCard(activeSet.id, cardId)}
       />
     )
