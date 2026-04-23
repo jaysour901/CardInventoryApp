@@ -137,7 +137,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           <div className="print-set-name">{set.year} {set.brand}</div>
           <div className="print-set-meta">
             {filter === 'All' ? 'Complete Checklist' : filter === 'Have' ? 'Cards Collected' : 'Cards Needed'}
-            {' · '}{visibleCards.length} cards
+            {' · '}{visibleCards.length} {filter === 'All' ? 'Total' : filter}
           </div>
         </div>
 
