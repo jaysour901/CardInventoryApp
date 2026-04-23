@@ -6,62 +6,91 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc
 export async function extractTextFromPdf(file) {
   const buffer = await file.arrayBuffer()
   const pdf = await pdfjsLib.getDocument({ data: buffer }).promise
-  let fullText = ''
+
+  // ── Pass 1: collect every text item from every page ─────────────────────
+  const allItems = []
+  let pageWidth = 612
 
   for (let p = 1; p <= pdf.numPages; p++) {
     const page = await pdf.getPage(p)
-    const content = await page.getTextContent()
+    const viewport = page.getViewport({ scale: 1 })
+    pageWidth = Math.max(pageWidth, viewport.width)
 
-    // Group text items by Y position (row), rounding to nearest 2 units
-    // to handle minor float differences in items on the same line
-    const lineMap = new Map()
+    const content = await page.getTextContent()
     for (const item of content.items) {
-      if (!item.str?.trim() || !item.transform) continue
-      const y = Math.round(item.transform[5] / 2) * 2
-      if (!lineMap.has(y)) lineMap.set(y, [])
-      lineMap.get(y).push({
+      const s = item.str?.trim()
+      if (!s || !item.transform) continue
+      allItems.push({
+        page: p,
         x: item.transform[4],
-        str: item.str,
-        // item.width is advance width in user space; estimate if zero
-        width: (item.width > 0) ? item.width : item.str.length * 5
+        y: item.transform[5],
+        str: s,
       })
     }
+  }
 
-    // Sort rows top-to-bottom (PDF Y axis is inverted)
-    const sortedLines = [...lineMap.entries()].sort(([ya], [yb]) => yb - ya)
+  if (allItems.length === 0) return ''
 
-    for (const [, items] of sortedLines) {
+  // ── Pass 2: find column left-edges ──────────────────────────────────────
+  // Card numbers (pure digit strings) always sit at the left edge of each
+  // column. Bucket their X positions and find the peaks.
+  const BUCKET = 8 // group X coords into 8-unit buckets
+  const buckets = {}
+  for (const item of allItems) {
+    if (!/^\d+$/.test(item.str)) continue
+    const b = Math.round(item.x / BUCKET)
+    buckets[b] = (buckets[b] || 0) + 1
+  }
+
+  // Keep buckets that appear on at least 3 different rows (real columns,
+  // not occasional numbers in card names like "1952 MVPs")
+  const peaks = Object.entries(buckets)
+    .filter(([, count]) => count >= 3)
+    .map(([b]) => Number(b) * BUCKET)
+    .sort((a, b) => a - b)
+
+  // Merge peaks that are within 15 units of each other
+  const columnStarts = peaks.reduce((acc, x) => {
+    if (acc.length === 0 || x - acc[acc.length - 1] > 15) acc.push(x)
+    return acc
+  }, [])
+
+  // ── Pass 3: assign every item to a column ───────────────────────────────
+  // A column spans from its left edge to the next column's left edge minus a
+  // small margin. Items to the LEFT of the first detected column go into
+  // column 0 (handles any checkboxes/bullets before the card number).
+  const numCols = Math.max(columnStarts.length, 1)
+
+  function getColumn(x) {
+    for (let i = columnStarts.length - 1; i >= 0; i--) {
+      if (x >= columnStarts[i] - 5) return i
+    }
+    return 0
+  }
+
+  // ── Pass 4: per-column, rebuild text lines sorted top-to-bottom ─────────
+  // We build one text stream per column so cards are in reading order.
+  const columnMaps = Array.from({ length: numCols }, () => new Map())
+
+  for (const item of allItems) {
+    const col = getColumn(item.x)
+    // Key by page + Y so items on the same line in the same column group together
+    const key = `${item.page}:${Math.round(item.y / 2) * 2}`
+    if (!columnMaps[col].has(key)) columnMaps[col].set(key, [])
+    columnMaps[col].get(key).push(item)
+  }
+
+  let fullText = ''
+  for (const lineMap of columnMaps) {
+    // Sort lines: by page first, then top-to-bottom within page (Y desc)
+    const sorted = [...lineMap.entries()].sort(([ka], [kb]) => {
+      const [pa, ya] = ka.split(':').map(Number)
+      const [pb, yb] = kb.split(':').map(Number)
+      return pa !== pb ? pa - pb : yb - ya
+    })
+    for (const [, items] of sorted) {
       items.sort((a, b) => a.x - b.x)
-
-      if (items.length === 1) {
-        fullText += items[0].str.trim() + '\n'
-        continue
-      }
-
-      // Calculate gap between the right edge of item[i] and left edge of item[i+1]
-      const gaps = items.slice(1).map((item, i) =>
-        item.x - (items[i].x + items[i].width)
-      )
-
-      // Median positive gap = baseline word spacing on this row
-      const positiveGaps = gaps.filter(g => g > 0).sort((a, b) => a - b)
-      const median = positiveGaps.length
-        ? positiveGaps[Math.floor(positiveGaps.length / 2)]
-        : 0
-      // A gap >= 4× the median (and at least 10 units) signals a column boundary
-      const columnThreshold = Math.max(median * 4, 10)
-
-      // Rebuild the row, inserting a newline at each column boundary
-      let segment = items[0].str
-      for (let i = 1; i < items.length; i++) {
-        if (gaps[i - 1] > columnThreshold) {
-          if (segment.trim()) fullText += segment.trim() + '\n'
-          segment = items[i].str
-        } else {
-          segment += ' ' + items[i].str
-        }
-      }
-      if (segment.trim()) fullText += segment.trim() + '\n'
+      fullText += items.map(i => i.str).join(' ').trim() + '\n'
     }
   }
 
