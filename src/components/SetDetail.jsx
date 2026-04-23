@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import TutorialModal from './TutorialModal'
 
 const FILTERS = ['All', 'Have', 'Need']
 
@@ -24,6 +25,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
   const [pasteText, setPasteText] = useState('')
   const [sortBy, setSortBy] = useState('number')
   const [importDone, setImportDone] = useState(null)
+  const [showTutorial, setShowTutorial] = useState(false)
 
   const total = set.cards.length
   const owned = set.cards.filter(c => c.owned).length
@@ -173,9 +175,14 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
               <button className="btn-icon" onClick={() => setShowBulk(false)} aria-label="Close">&#10005;</button>
             </div>
 
-            <p className="bulk-hint">
-              Paste a checklist below. Each line should start with a card number followed by the player name — extra tags like RC, MGR, UER are kept as part of the name.
-            </p>
+            <div className="bulk-hint-row">
+              <p className="bulk-hint">
+                Paste a checklist below. Each line should start with a card number followed by the player name — extra tags like RC, MGR, UER are kept as part of the name.
+              </p>
+              <button className="tutorial-link" onClick={() => setShowTutorial(true)}>
+                &#9432; How to get data from TCDB.com
+              </button>
+            </div>
             <textarea
               className="bulk-textarea"
               placeholder={"12 National League 1964 Str LL\n70 Bill Skowron\n127 Frank Lary\n185 Max Alvis RC\n..."}
@@ -298,6 +305,8 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           </ul>
         )}
       </main>
+
+      {showTutorial && <TutorialModal onClose={() => setShowTutorial(false)} />}
     </div>
   )
 }
