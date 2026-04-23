@@ -168,11 +168,6 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
                 <option value="player">Sort: Player</option>
               </select>
             )}
-            {total > 0 && (
-              <button className="btn btn-secondary" onClick={() => window.print()}>
-                &#128438; Print
-              </button>
-            )}
             <button className="btn btn-secondary" onClick={openBulk}>
               &#128203; Bulk Import
             </button>
@@ -290,6 +285,12 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
             <p>No cards match this filter.</p>
           </div>
         ) : (
+          <>
+            <div className="list-toolbar no-print">
+              <button className="btn btn-secondary btn-sm" onClick={() => window.print()}>
+                &#128438; Print
+              </button>
+            </div>
           <ul className="card-list">
             {visibleCards.map(card => {
               const copies = card.copies ?? (card.owned ? 1 : 0)
@@ -336,6 +337,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
               )
             })}
           </ul>
+          </>
         )}
       </main>
 

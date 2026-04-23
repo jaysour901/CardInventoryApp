@@ -476,6 +476,15 @@
 .sort-select option { background: #152035; color: var(--text-strong); }
 
 /* ─────────────────────────────────────
+   List toolbar (print button above list)
+───────────────────────────────────── */
+.list-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+/* ─────────────────────────────────────
    Card list (set detail)
 ───────────────────────────────────── */
 .card-list {
