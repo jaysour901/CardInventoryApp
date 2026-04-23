@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import TradingCardIcon from './TradingCardIcon'
 
-export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onPrintSet }) {
+export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet }) {
   const [showForm, setShowForm] = useState(false)
   const [brand, setBrand] = useState('')
   const [year, setYear] = useState('')
@@ -113,24 +113,14 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onPr
                       )}
                     </div>
                   </button>
-                  <div className="set-card-actions">
-                    <button
-                      className="btn btn-secondary btn-sm"
-                      onClick={e => { e.stopPropagation(); onPrintSet(set.id) }}
-                      title="Print / Save PDF"
-                      aria-label={`Print ${set.year} ${set.brand}`}
-                    >
-                      &#128438; Print
-                    </button>
-                    <button
-                      className="btn-icon delete-btn"
-                      onClick={e => { e.stopPropagation(); onDeleteSet(set.id) }}
-                      title="Delete set"
-                      aria-label={`Delete ${set.year} ${set.brand}`}
-                    >
-                      &#10005;
-                    </button>
-                  </div>
+                  <button
+                    className="btn-icon delete-btn"
+                    onClick={e => { e.stopPropagation(); onDeleteSet(set.id) }}
+                    title="Delete set"
+                    aria-label={`Delete ${set.year} ${set.brand}`}
+                  >
+                    &#10005;
+                  </button>
                 </li>
               )
             })}

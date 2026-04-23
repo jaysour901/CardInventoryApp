@@ -1194,29 +1194,60 @@
 .tutorial-link:hover { opacity: 0.75; }
 
 /* ─────────────────────────────────────
+   Print-only elements (hidden on screen)
+───────────────────────────────────── */
+.print-only { display: none; }
+
+.print-set-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #1a3a5c;
+}
+.print-set-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+}
+.print-set-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* ─────────────────────────────────────
    Print styles
 ───────────────────────────────────── */
 @media print {
-  /* hide everything that isn't the report */
   .no-print { display: none !important; }
-  .app-header { display: none !important; }
+  .print-only { display: block !important; }
 
   body { background: #fff; }
   #root { border: none; }
 
-  .report-page {
-    padding: 0;
-    max-width: 100%;
-  }
+  /* SetDetail card list print styles */
+  .page { min-height: unset; }
+  .content { padding: 16px; max-width: 100%; }
 
-  .report-header {
-    border-bottom: 2px solid #000;
-  }
+  .card-list { gap: 4px; }
 
+  .card-item {
+    border-radius: 4px !important;
+    border: 1px solid #ccc !important;
+    padding-right: 0 !important;
+  }
+  .card-item.owned  { border-left: 4px solid #198754 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card-item.needed { border-left: 4px solid #dc3545 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .card-label { padding: 8px 10px; min-height: unset; }
+  .card-number { font-size: 13px; min-width: 40px; }
+  .card-player { font-size: 14px; }
+
+  /* PrintView report styles */
+  .report-page { padding: 0; max-width: 100%; }
+  .report-header { border-bottom: 2px solid #000; }
   .report-set-name { color: #000; font-size: 22px; }
-
   .report-table { font-size: 13px; }
-
   .report-table th {
     background: #1a3a5c !important;
     -webkit-print-color-adjust: exact;
@@ -1224,22 +1255,15 @@
     color: #fff !important;
     padding: 8px 10px;
   }
-
   .report-table td { padding: 7px 10px; }
-
   .report-table tbody tr:nth-child(even) {
     background: #f5f5f5 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-
-  .rpt-pill {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
+  .rpt-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .rpt-pill.have { background: #d4edda !important; color: #155724 !important; }
   .rpt-pill.need { background: #f8d7da !important; color: #721c24 !important; }
-
   .rstat-val { color: #000; }
   .report-stat.have .rstat-val { color: #155724 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .report-stat.need .rstat-val { color: #721c24 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }

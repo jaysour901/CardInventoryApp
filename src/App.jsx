@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import SetList from './components/SetList'
 import SetDetail from './components/SetDetail'
-import PrintView from './components/PrintView'
 import './App.css'
 
 const STORAGE_KEY = 'card-collector-sets'
@@ -21,7 +20,7 @@ function loadSets() {
 
 export default function App() {
   const [sets, setSets] = useState(loadSets)
-  const [view, setView] = useState('home') // 'home' | 'detail' | 'print'
+  const [view, setView] = useState('home') // 'home' | 'detail'
   const [activeSetId, setActiveSetId] = useState(null)
 
   useEffect(() => {
@@ -94,10 +93,6 @@ export default function App() {
     ))
   }
 
-  if (view === 'print' && activeSet) {
-    return <PrintView set={activeSet} onBack={() => { setView('home'); setActiveSetId(null) }} />
-  }
-
   if (view === 'detail' && activeSet) {
     return (
       <SetDetail
@@ -118,7 +113,6 @@ export default function App() {
       onAddSet={addSet}
       onSelectSet={id => { setActiveSetId(id); setView('detail') }}
       onDeleteSet={deleteSet}
-      onPrintSet={id => { setActiveSetId(id); setView('print') }}
     />
   )
 }

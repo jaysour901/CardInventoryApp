@@ -93,7 +93,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
 
   return (
     <div className="page">
-      <header className="app-header">
+      <header className="app-header no-print">
         <div className="header-inner">
           <button className="back-btn" onClick={onBack}>
             &#8592; All Sets
@@ -107,7 +107,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
 
       <main className="content">
         {total > 0 && (
-          <div className="summary-bar card">
+          <div className="summary-bar card no-print">
             <div className="summary-numbers">
               <div className="summary-stat">
                 <span className="stat-val">{total}</span>
@@ -132,7 +132,16 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           </div>
         )}
 
-        <div className="section-header">
+        {/* Print-only header — hidden on screen, shown when printing */}
+        <div className="print-only print-set-header">
+          <div className="print-set-name">{set.year} {set.brand}</div>
+          <div className="print-set-meta">
+            {filter === 'All' ? 'Complete Checklist' : filter === 'Have' ? 'Cards Collected' : 'Cards Needed'}
+            {' · '}{visibleCards.length} cards
+          </div>
+        </div>
+
+        <div className="section-header no-print">
           <div className="filter-tabs">
             {FILTERS.map(f => (
               <button
@@ -158,6 +167,11 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
                 <option value="number">Sort: # Number</option>
                 <option value="player">Sort: Player</option>
               </select>
+            )}
+            {total > 0 && (
+              <button className="btn btn-secondary" onClick={() => window.print()}>
+                &#128438; Print
+              </button>
             )}
             <button className="btn btn-secondary" onClick={openBulk}>
               &#128203; Bulk Import
@@ -286,16 +300,16 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
                       type="checkbox"
                       checked={card.owned}
                       onChange={() => onToggleOwned(card.id)}
-                      className="card-checkbox"
+                      className="card-checkbox no-print"
                     />
                     <span className="card-number">#{card.number}</span>
                     <span className="card-player">{card.player}</span>
-                    <span className={`status-pill ${card.owned ? 'have' : 'need'}`}>
+                    <span className={`status-pill ${card.owned ? 'have' : 'need'} no-print`}>
                       {card.owned ? 'Have' : 'Need'}
                     </span>
                   </label>
                   {card.owned && (
-                    <div className="copies-stepper" onClick={e => e.stopPropagation()}>
+                    <div className="copies-stepper no-print" onClick={e => e.stopPropagation()}>
                       <button
                         className="copies-btn"
                         onClick={() => onUpdateCopies(card.id, copies - 1)}
@@ -311,7 +325,7 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
                     </div>
                   )}
                   <button
-                    className="btn-icon delete-btn"
+                    className="btn-icon delete-btn no-print"
                     onClick={() => onDeleteCard(card.id)}
                     title="Remove card"
                     aria-label={`Remove #${card.number} ${card.player}`}
