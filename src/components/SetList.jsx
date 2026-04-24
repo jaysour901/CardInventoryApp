@@ -64,24 +64,22 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
     <div className="page">
       <header className="app-header">
         <div className="header-inner">
-          <div className="header-top-row">
-            <div className="header-title">
-              <TradingCardIcon size={38} className="card-icon-svg" />
-              <h1 className="app-name-banner">Set Collector</h1>
-            </div>
-            <div className="header-io-btns">
-              {sets.length > 0 && (
-                <button className="btn btn-secondary btn-sm" onClick={onExport} title="Export all sets to a file">
-                  &#8595; Export
-                </button>
-              )}
-              <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()} title="Import sets from a file">
-                &#8593; Import
+          <div className="header-title">
+            <TradingCardIcon size={38} className="card-icon-svg" />
+            <h1 className="app-name-banner">Set Collector</h1>
+          </div>
+          <div className="header-io-btns">
+            {sets.length > 0 && (
+              <button className="btn btn-secondary btn-sm" onClick={onExport} title="Export all sets to a file">
+                &#8595; Export
               </button>
-              <button className="hamburger-btn" onClick={onOpenHelp} aria-label="Open help">
-                <span /><span /><span />
-              </button>
-            </div>
+            )}
+            <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()} title="Import sets from a file">
+              &#8593; Import
+            </button>
+            <button className="hamburger-btn" onClick={onOpenHelp} aria-label="Open help">
+              <span /><span /><span />
+            </button>
           </div>
           <p className="header-sub">Track your card sets and collection — know what you have, what you need, and how close you are to completing each set</p>
         </div>
