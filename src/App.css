@@ -34,6 +34,14 @@
   padding: 20px 20px 18px;
 }
 
+.app-name-banner {
+  font-size: 34px;
+  font-weight: 900;
+  color: var(--text-strong);
+  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+}
+
 .header-top-row {
   display: flex;
   align-items: center;
