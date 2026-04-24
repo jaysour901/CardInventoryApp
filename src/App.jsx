@@ -29,10 +29,10 @@ export default function App() {
 
   const activeSet = sets.find(s => s.id === activeSetId) ?? null
 
-  function addSet(brand, year) {
+  function addSet(brand, year, sport) {
     setSets(prev => [
       ...prev,
-      { id: generateId(), brand: brand.trim(), year: year.trim(), cards: [] }
+      { id: generateId(), brand: brand.trim(), year: year.trim(), sport: sport || '', cards: [] }
     ])
   }
 

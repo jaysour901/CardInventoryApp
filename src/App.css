@@ -355,6 +355,85 @@
 }
 
 /* ─────────────────────────────────────
+   Sport filter row (home screen)
+───────────────────────────────────── */
+.sport-filter-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.sport-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  transition: all 0.2s;
+  min-height: 38px;
+}
+.sport-filter-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-strong); }
+.sport-filter-btn.active {
+  background: rgba(79, 142, 247, 0.18);
+  border-color: rgba(79, 142, 247, 0.4);
+  color: #7db4fa;
+}
+
+/* ─────────────────────────────────────
+   Sport tag on set card
+───────────────────────────────────── */
+.sport-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  width: fit-content;
+}
+.sport-tag-baseball   { background: rgba( 79,142,247,0.15); color: #7db4fa; }
+.sport-tag-football   { background: rgba(249,115, 22,0.15); color: #fb923c; }
+.sport-tag-basketball { background: rgba(245,158, 11,0.15); color: #fbbf24; }
+.sport-tag-hockey     { background: rgba( 34,211,238,0.15); color: #22d3ee; }
+
+/* ─────────────────────────────────────
+   Sport picker (add-set form)
+───────────────────────────────────── */
+.sport-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sport-pick-btn {
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  transition: all 0.2s;
+  min-height: 38px;
+}
+.sport-pick-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-strong); }
+.sport-pick-btn.active {
+  background: rgba(79, 142, 247, 0.2);
+  border-color: rgba(79, 142, 247, 0.5);
+  color: #7db4fa;
+}
+
+/* ─────────────────────────────────────
    Set card actions
 ───────────────────────────────────── */
 .set-card-actions {
