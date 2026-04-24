@@ -63,9 +63,21 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
     <div className="page">
       <header className="app-header">
         <div className="header-inner">
-          <div className="header-title">
-            <TradingCardIcon size={38} className="card-icon-svg" />
-            <h1>Card Collector</h1>
+          <div className="header-top-row">
+            <div className="header-title">
+              <TradingCardIcon size={38} className="card-icon-svg" />
+              <h1>Card Collector</h1>
+            </div>
+            <div className="header-io-btns">
+              {sets.length > 0 && (
+                <button className="btn btn-secondary btn-sm" onClick={onExport} title="Export all sets to a file">
+                  &#8595; Export
+                </button>
+              )}
+              <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()} title="Import sets from a file">
+                &#8593; Import
+              </button>
+            </div>
           </div>
           <p className="header-sub">Track your sets — see what you have and what you need</p>
         </div>
@@ -75,14 +87,6 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
         <div className="section-header">
           <h2>My Card Sets</h2>
           <div className="header-actions">
-            {sets.length > 0 && (
-              <button className="btn btn-secondary btn-sm" onClick={onExport} title="Export all sets to a file">
-                &#8595; Export
-              </button>
-            )}
-            <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()} title="Import sets from a file">
-              &#8593; Import
-            </button>
             <button className="btn btn-primary" onClick={() => setShowForm(v => !v)}>
               {showForm ? 'Cancel' : '+ Add Set'}
             </button>
