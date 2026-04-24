@@ -1,13 +1,14 @@
 import { useState, useMemo, useRef } from 'react'
 import TradingCardIcon from './TradingCardIcon'
 
-const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey']
+const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey', 'Other']
 
 const SPORT_EMOJI = {
   Baseball: '⚾',
   Football: '🏈',
   Basketball: '🏀',
   Hockey: '🏒',
+  Other: '🃏',
 }
 
 export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onExport, onImport }) {
@@ -135,19 +136,18 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
               </div>
             </div>
             <div className="form-group" style={{ marginTop: 4 }}>
-              <label>Sport</label>
-              <div className="sport-picker">
+              <label htmlFor="sport">Sport</label>
+              <select
+                id="sport"
+                className="sport-select"
+                value={sport}
+                onChange={e => setSport(e.target.value)}
+              >
+                <option value="">— No sport —</option>
                 {SPORTS.map(s => (
-                  <button
-                    key={s}
-                    type="button"
-                    className={`sport-pick-btn${sport === s ? ' active' : ''}`}
-                    onClick={() => setSport(prev => prev === s ? '' : s)}
-                  >
-                    {SPORT_EMOJI[s]} {s}
-                  </button>
+                  <option key={s} value={s}>{SPORT_EMOJI[s]} {s}</option>
                 ))}
-              </div>
+              </select>
             </div>
             <div className="form-actions">
               <button type="submit" className="btn btn-primary" disabled={!brand.trim() || !year.trim()}>

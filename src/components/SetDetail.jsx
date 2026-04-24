@@ -3,8 +3,8 @@ import TutorialModal from './TutorialModal'
 
 const FILTERS = ['All', 'Have', 'Need']
 
-const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey']
-const SPORT_EMOJI = { Baseball: '⚾', Football: '🏈', Basketball: '🏀', Hockey: '🏒' }
+const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey', 'Other']
+const SPORT_EMOJI = { Baseball: '⚾', Football: '🏈', Basketball: '🏀', Hockey: '🏒', Other: '🃏' }
 
 const CONDITIONS = ['', 'Raw', 'Good', 'VG', 'EX', 'NM', 'NM-MT', 'Mint', 'Graded']
 
@@ -122,16 +122,17 @@ export default function SetDetail({ set, onBack, onUpdateSet, onAddCard, onBulkA
             <h1>{set.brand}</h1>
           </div>
           <div className="set-sport-row">
-            {SPORTS.map(s => (
-              <button
-                key={s}
-                className={`sport-pick-btn${set.sport === s ? ' active' : ''}`}
-                onClick={() => onUpdateSet({ sport: set.sport === s ? '' : s })}
-                aria-label={`Tag as ${s}`}
-              >
-                {SPORT_EMOJI[s]} {s}
-              </button>
-            ))}
+            <select
+              className="sport-select"
+              value={set.sport || ''}
+              onChange={e => onUpdateSet({ sport: e.target.value })}
+              aria-label="Set sport category"
+            >
+              <option value="">— No sport —</option>
+              {SPORTS.map(s => (
+                <option key={s} value={s}>{SPORT_EMOJI[s]} {s}</option>
+              ))}
+            </select>
           </div>
         </div>
       </header>
