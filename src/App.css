@@ -94,6 +94,18 @@
   color: var(--text-strong);
 }
 
+.set-sport-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.set-sport-row .sport-pick-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  min-height: 30px;
+}
+
 /* ─────────────────────────────────────
    Section header row
 ───────────────────────────────────── */

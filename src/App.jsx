@@ -36,6 +36,10 @@ export default function App() {
     ])
   }
 
+  function updateSet(id, updates) {
+    setSets(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s))
+  }
+
   function deleteSet(id) {
     setSets(prev => prev.filter(s => s.id !== id))
     if (activeSetId === id) setActiveSetId(null)
@@ -107,6 +111,7 @@ export default function App() {
       <SetDetail
         set={activeSet}
         onBack={() => { setView('home'); setActiveSetId(null) }}
+        onUpdateSet={updates => updateSet(activeSet.id, updates)}
         onAddCard={(number, player) => addCard(activeSet.id, number, player)}
         onBulkAddCards={cards => bulkAddCards(activeSet.id, cards)}
         onToggleOwned={cardId => toggleOwned(activeSet.id, cardId)}

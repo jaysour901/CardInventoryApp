@@ -3,6 +3,9 @@ import TutorialModal from './TutorialModal'
 
 const FILTERS = ['All', 'Have', 'Need']
 
+const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey']
+const SPORT_EMOJI = { Baseball: '⚾', Football: '🏈', Basketball: '🏀', Hockey: '🏒' }
+
 const CONDITIONS = ['', 'Raw', 'Good', 'VG', 'EX', 'NM', 'NM-MT', 'Mint', 'Graded']
 
 const CONDITION_CLASS = {
@@ -24,7 +27,7 @@ function parsePaste(text) {
     .filter(Boolean)
 }
 
-export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onUpdateCard, onDeleteCard }) {
+export default function SetDetail({ set, onBack, onUpdateSet, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onUpdateCard, onDeleteCard }) {
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
   const [showBulk, setShowBulk] = useState(false)
@@ -117,6 +120,18 @@ export default function SetDetail({ set, onBack, onAddCard, onBulkAddCards, onTo
           <div className="set-title">
             <span className="set-year-lg">{set.year}</span>
             <h1>{set.brand}</h1>
+          </div>
+          <div className="set-sport-row">
+            {SPORTS.map(s => (
+              <button
+                key={s}
+                className={`sport-pick-btn${set.sport === s ? ' active' : ''}`}
+                onClick={() => onUpdateSet({ sport: set.sport === s ? '' : s })}
+                aria-label={`Tag as ${s}`}
+              >
+                {SPORT_EMOJI[s]} {s}
+              </button>
+            ))}
           </div>
         </div>
       </header>
