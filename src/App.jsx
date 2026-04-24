@@ -94,6 +94,26 @@ export default function App() {
     ))
   }
 
+  function exportData() {
+    const json = JSON.stringify(sets, null, 2)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `card-collector-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function importData(incoming) {
+    setSets(prev => {
+      const existingIds = new Set(prev.map(s => s.id))
+      const newSets = incoming.filter(s => !existingIds.has(s.id))
+      return [...prev, ...newSets]
+    })
+    return incoming.filter(s => !sets.some(e => e.id === s.id)).length
+  }
+
   function bulkAddCards(setId, cards) {
     setSets(prev => prev.map(s =>
       s.id !== setId ? s : {
@@ -128,6 +148,8 @@ export default function App() {
       onAddSet={addSet}
       onSelectSet={id => { setActiveSetId(id); setView('detail') }}
       onDeleteSet={deleteSet}
+      onExport={exportData}
+      onImport={importData}
     />
   )
 }

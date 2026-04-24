@@ -367,6 +367,19 @@
 }
 
 /* ─────────────────────────────────────
+   Import feedback
+───────────────────────────────────── */
+.import-msg {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.import-msg-ok  { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.import-msg-err { background: rgba(244,  63,  94, 0.12); color: #fb7185; border: 1px solid rgba(244,63,94,0.2); }
+
+/* ─────────────────────────────────────
    Sport filter row (home screen)
 ───────────────────────────────────── */
 .sport-filter-row {

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import TradingCardIcon from './TradingCardIcon'
 
 const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey']
@@ -10,12 +10,33 @@ const SPORT_EMOJI = {
   Hockey: '🏒',
 }
 
-export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet }) {
+export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onExport, onImport }) {
   const [showForm, setShowForm] = useState(false)
   const [brand, setBrand] = useState('')
   const [year, setYear] = useState('')
   const [sport, setSport] = useState('')
   const [sportFilter, setSportFilter] = useState('All')
+  const [importMsg, setImportMsg] = useState(null)
+  const fileRef = useRef(null)
+
+  function handleFileChange(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = evt => {
+      try {
+        const data = JSON.parse(evt.target.result)
+        if (!Array.isArray(data)) throw new Error()
+        const added = onImport(data)
+        setImportMsg({ ok: true, text: `${added} set${added !== 1 ? 's' : ''} imported successfully!` })
+      } catch {
+        setImportMsg({ ok: false, text: 'Invalid file — please use a Card Collector export.' })
+      }
+      setTimeout(() => setImportMsg(null), 3500)
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }
 
   const sportCounts = useMemo(() => {
     const counts = {}
@@ -54,11 +75,33 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet }) {
         <div className="section-header">
           <h2>My Card Sets</h2>
           <div className="header-actions">
+            {sets.length > 0 && (
+              <button className="btn btn-secondary btn-sm" onClick={onExport} title="Export all sets to a file">
+                &#8595; Export
+              </button>
+            )}
+            <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()} title="Import sets from a file">
+              &#8593; Import
+            </button>
             <button className="btn btn-primary" onClick={() => setShowForm(v => !v)}>
               {showForm ? 'Cancel' : '+ Add Set'}
             </button>
           </div>
         </div>
+
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".json,application/json"
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+        />
+
+        {importMsg && (
+          <div className={`import-msg ${importMsg.ok ? 'import-msg-ok' : 'import-msg-err'}`}>
+            {importMsg.ok ? '✓' : '✕'} {importMsg.text}
+          </div>
+        )}
 
         {showForm && (
           <form className="add-form card" onSubmit={handleSubmit}>
