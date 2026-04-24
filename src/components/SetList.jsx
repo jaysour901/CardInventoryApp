@@ -42,30 +42,9 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet }) {
     <div className="page">
       <header className="app-header">
         <div className="header-inner">
-          <div className="header-top-row">
-            <div className="header-title">
-              <TradingCardIcon size={38} className="card-icon-svg" />
-              <h1>Card Collector</h1>
-            </div>
-            {sets.length > 0 && (
-              <div className="header-sport-filters">
-                <button
-                  className={`sport-filter-btn${sportFilter === 'All' ? ' active' : ''}`}
-                  onClick={() => setSportFilter('All')}
-                >
-                  All <span className="tab-count">{sets.length}</span>
-                </button>
-                {SPORTS.filter(s => sportCounts[s] > 0).map(s => (
-                  <button
-                    key={s}
-                    className={`sport-filter-btn${sportFilter === s ? ' active' : ''}`}
-                    onClick={() => setSportFilter(s)}
-                  >
-                    {SPORT_EMOJI[s]} {s} <span className="tab-count">{sportCounts[s]}</span>
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="header-title">
+            <TradingCardIcon size={38} className="card-icon-svg" />
+            <h1>Card Collector</h1>
           </div>
           <p className="header-sub">Track your sets — see what you have and what you need</p>
         </div>
@@ -131,6 +110,25 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet }) {
           </form>
         )}
 
+        {sets.length > 0 && (
+          <div className="sport-filter-row">
+            <button
+              className={`sport-filter-btn${sportFilter === 'All' ? ' active' : ''}`}
+              onClick={() => setSportFilter('All')}
+            >
+              All <span className="tab-count">{sets.length}</span>
+            </button>
+            {SPORTS.filter(s => sportCounts[s] > 0).map(s => (
+              <button
+                key={s}
+                className={`sport-filter-btn${sportFilter === s ? ' active' : ''}`}
+                onClick={() => setSportFilter(s)}
+              >
+                {SPORT_EMOJI[s]} {s} <span className="tab-count">{sportCounts[s]}</span>
+              </button>
+            ))}
+          </div>
+        )}
 
         {sets.length === 0 ? (
           <div className="empty-state">
