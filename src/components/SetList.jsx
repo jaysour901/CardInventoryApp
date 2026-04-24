@@ -83,7 +83,7 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
               </button>
             </div>
           </div>
-          <p className="header-sub">Track your card sets and inventory — know what you have, what you need, and how close you are to completing each set</p>
+          <p className="header-sub">Track your card sets and collection — know what you have, what you need, and how close you are to completing each set</p>
         </div>
       </header>
 
