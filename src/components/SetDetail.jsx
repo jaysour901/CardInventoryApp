@@ -189,30 +189,6 @@ export default function SetDetail({ set, onBack, onUpdateSet, onAddCard, onBulkA
             ))}
           </div>
 
-          {total > 0 && (
-            <div className="search-row">
-              <div className="search-wrap">
-                <span className="search-icon">&#128269;</span>
-                <input
-                  className="search-input"
-                  type="search"
-                  placeholder="Search by player or card #…"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  aria-label="Search cards"
-                />
-                {search && (
-                  <button className="search-clear" onClick={() => setSearch('')} aria-label="Clear search">&#10005;</button>
-                )}
-              </div>
-              {search.trim() && (
-                <span className="search-results-count">
-                  {visibleCards.length} result{visibleCards.length !== 1 ? 's' : ''}
-                </span>
-              )}
-            </div>
-          )}
-
           <div className="toolbar-row">
             <div className="toolbar-left">
               {total > 1 && (
@@ -239,6 +215,30 @@ export default function SetDetail({ set, onBack, onUpdateSet, onAddCard, onBulkA
               </button>
             )}
           </div>
+
+          {total > 0 && (
+            <div className="search-row">
+              <div className="search-wrap">
+                <span className="search-icon">&#128269;</span>
+                <input
+                  className="search-input"
+                  type="search"
+                  placeholder="Search by player or card #…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  aria-label="Search cards"
+                />
+                {search && (
+                  <button className="search-clear" onClick={() => setSearch('')} aria-label="Clear search">&#10005;</button>
+                )}
+              </div>
+              {search.trim() && (
+                <span className="search-results-count">
+                  {visibleCards.length} result{visibleCards.length !== 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {showBulk && (
