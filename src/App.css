@@ -34,6 +34,12 @@
   padding: 20px 20px 18px;
 }
 
+.header-help-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+}
+
 .app-name-banner {
   font-size: 34px;
   font-weight: 900;
