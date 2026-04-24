@@ -39,7 +39,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        cacheId: 'card-collector-v11',
+        cacheId: 'card-collector-v12',
         // Always fetch the HTML shell from network so updates are immediate
         navigateFallbackDenylist: [],
         runtimeCaching: [
