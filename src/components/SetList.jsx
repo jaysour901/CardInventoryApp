@@ -11,7 +11,7 @@ const SPORT_EMOJI = {
   Other: '🃏',
 }
 
-export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onExport, onImport }) {
+export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onExport, onImport, onOpenHelp }) {
   const [showForm, setShowForm] = useState(false)
   const [brand, setBrand] = useState('')
   const [year, setYear] = useState('')
@@ -77,6 +77,9 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
               )}
               <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()} title="Import sets from a file">
                 &#8593; Import
+              </button>
+              <button className="hamburger-btn" onClick={onOpenHelp} aria-label="Open help">
+                <span /><span /><span />
               </button>
             </div>
           </div>

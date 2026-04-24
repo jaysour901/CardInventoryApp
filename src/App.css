@@ -379,6 +379,156 @@
 }
 
 /* ─────────────────────────────────────
+   Hamburger button
+───────────────────────────────────── */
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.hamburger-btn:hover { background: rgba(255, 255, 255, 0.14); }
+.hamburger-btn span {
+  display: block;
+  height: 2px;
+  background: var(--text-strong);
+  border-radius: 2px;
+  width: 100%;
+}
+
+/* Detail page: back btn + hamburger on same row */
+.detail-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+/* ─────────────────────────────────────
+   Help drawer
+───────────────────────────────────── */
+.help-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+}
+
+.help-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(340px, 92vw);
+  background: #0f1e33;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.help-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.help-drawer-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-strong);
+}
+
+.help-close {
+  color: var(--text-muted);
+}
+.help-close:hover { background: rgba(244, 63, 94, 0.15); color: var(--need); }
+
+.help-drawer-body {
+  overflow-y: auto;
+  flex: 1;
+  padding: 12px 0 40px;
+}
+
+/* ─────────────────────────────────────
+   Help accordion topics
+───────────────────────────────────── */
+.help-topic {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.help-topic-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.2s;
+}
+.help-topic-btn:hover { background: rgba(255, 255, 255, 0.04); }
+.help-topic.open .help-topic-btn { color: #7db4fa; }
+
+.help-chevron {
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.help-topic-body {
+  padding: 0 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.help-para {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.help-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin: 8px 0 2px;
+}
+
+.help-bullet {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 4px;
+}
+
+/* ─────────────────────────────────────
    Import feedback
 ───────────────────────────────────── */
 .import-msg {

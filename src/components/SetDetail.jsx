@@ -27,7 +27,7 @@ function parsePaste(text) {
     .filter(Boolean)
 }
 
-export default function SetDetail({ set, onBack, onUpdateSet, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onUpdateCard, onDeleteCard }) {
+export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onUpdateCard, onDeleteCard }) {
   const [filter, setFilter] = useState('All')
   const [showForm, setShowForm] = useState(false)
   const [showBulk, setShowBulk] = useState(false)
@@ -114,9 +114,14 @@ export default function SetDetail({ set, onBack, onUpdateSet, onAddCard, onBulkA
     <div className="page">
       <header className="app-header no-print">
         <div className="header-inner">
-          <button className="back-btn" onClick={onBack}>
-            &#8592; All Sets
-          </button>
+          <div className="detail-header-top">
+            <button className="back-btn" onClick={onBack}>
+              &#8592; All Sets
+            </button>
+            <button className="hamburger-btn" onClick={onOpenHelp} aria-label="Open help">
+              <span /><span /><span />
+            </button>
+          </div>
           <div className="set-title">
             <span className="set-year-lg">{set.year}</span>
             <h1>{set.brand}</h1>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import SetList from './components/SetList'
 import SetDetail from './components/SetDetail'
+import HelpPanel from './components/HelpPanel'
 import './App.css'
 
 const STORAGE_KEY = 'card-collector-sets'
@@ -22,6 +23,7 @@ export default function App() {
   const [sets, setSets] = useState(loadSets)
   const [view, setView] = useState('home') // 'home' | 'detail'
   const [activeSetId, setActiveSetId] = useState(null)
+  const [showHelp, setShowHelp] = useState(false)
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sets))
@@ -128,28 +130,36 @@ export default function App() {
 
   if (view === 'detail' && activeSet) {
     return (
-      <SetDetail
-        set={activeSet}
-        onBack={() => { setView('home'); setActiveSetId(null) }}
-        onUpdateSet={updates => updateSet(activeSet.id, updates)}
+      <>
+        <SetDetail
+          set={activeSet}
+          onBack={() => { setView('home'); setActiveSetId(null) }}
+          onOpenHelp={() => setShowHelp(true)}
+          onUpdateSet={updates => updateSet(activeSet.id, updates)}
         onAddCard={(number, player) => addCard(activeSet.id, number, player)}
         onBulkAddCards={cards => bulkAddCards(activeSet.id, cards)}
         onToggleOwned={cardId => toggleOwned(activeSet.id, cardId)}
         onUpdateCopies={(cardId, count) => updateCopies(activeSet.id, cardId, count)}
         onUpdateCard={(cardId, updates) => updateCard(activeSet.id, cardId, updates)}
         onDeleteCard={cardId => deleteCard(activeSet.id, cardId)}
-      />
+        />
+        {showHelp && <HelpPanel onClose={() => setShowHelp(false)} />}
+      </>
     )
   }
 
   return (
-    <SetList
-      sets={sets}
-      onAddSet={addSet}
-      onSelectSet={id => { setActiveSetId(id); setView('detail') }}
-      onDeleteSet={deleteSet}
-      onExport={exportData}
-      onImport={importData}
-    />
+    <>
+      <SetList
+        sets={sets}
+        onAddSet={addSet}
+        onSelectSet={id => { setActiveSetId(id); setView('detail') }}
+        onDeleteSet={deleteSet}
+        onExport={exportData}
+        onImport={importData}
+        onOpenHelp={() => setShowHelp(true)}
+      />
+      {showHelp && <HelpPanel onClose={() => setShowHelp(false)} />}
+    </>
   )
 }
