@@ -64,14 +64,14 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
     <div className="page">
       <header className="app-header">
         <div className="header-inner">
-          <div className="header-help-row">
+          <div className="header-top-row">
+            <div className="header-title">
+              <TradingCardIcon size={38} className="card-icon-svg" />
+              <h1 className="app-name-banner">Set Collector</h1>
+            </div>
             <button className="hamburger-btn" onClick={onOpenHelp} aria-label="Open help">
               <span /><span /><span />
             </button>
-          </div>
-          <div className="header-title">
-            <TradingCardIcon size={38} className="card-icon-svg" />
-            <h1 className="app-name-banner">Set Collector</h1>
           </div>
           <div className="header-io-btns">
             {sets.length > 0 && (
