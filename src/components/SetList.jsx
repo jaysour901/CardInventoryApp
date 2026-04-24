@@ -31,7 +31,7 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
         const added = onImport(data)
         setImportMsg({ ok: true, text: `${added} set${added !== 1 ? 's' : ''} imported successfully!` })
       } catch {
-        setImportMsg({ ok: false, text: 'Invalid file — please use a Card Collector export.' })
+        setImportMsg({ ok: false, text: 'Invalid file — please use a Set Collector export.' })
       }
       setTimeout(() => setImportMsg(null), 3500)
     }
@@ -67,7 +67,7 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
           <div className="header-top-row">
             <div className="header-title">
               <TradingCardIcon size={38} className="card-icon-svg" />
-              <h1>Card Collector</h1>
+              <h1>Set Collector</h1>
             </div>
             <div className="header-io-btns">
               {sets.length > 0 && (

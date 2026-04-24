@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
-        name: 'Card Collector Tracker',
-        short_name: 'Card Collector',
+        name: 'Set Collector',
+        short_name: 'Set Collector',
         description: 'Track your trading card sets — see what you have and what you need',
         theme_color: '#1a3a5c',
         background_color: '#142d4a',
@@ -39,7 +39,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        cacheId: 'card-collector-v14',
+        cacheId: 'set-collector-v1',
         // Always fetch the HTML shell from network so updates are immediate
         navigateFallbackDenylist: [],
         runtimeCaching: [

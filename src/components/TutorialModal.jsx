@@ -59,7 +59,7 @@ const STEPS = [
     ],
   },
   {
-    title: 'Paste into Card Collector',
+    title: 'Paste into Set Collector',
     img: null,
     bullets: [
       'Come back to this app and open your set — or create a new one first if you haven\'t already.',
