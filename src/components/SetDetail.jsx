@@ -38,6 +38,7 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
   const [importDone, setImportDone] = useState(null)
   const [showTutorial, setShowTutorial] = useState(false)
   const [expandedCardId, setExpandedCardId] = useState(null)
+  const [expandedNameId, setExpandedNameId] = useState(null)
   const [search, setSearch] = useState('')
 
   const total = set.cards.length
@@ -360,6 +361,7 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
               const condition = card.condition || ''
               const notes = card.notes || ''
               const isExpanded = expandedCardId === card.id
+              const isNameExpanded = expandedNameId === card.id
               return (
                 <li key={card.id} className={`card-item${card.owned ? ' owned' : ' needed'}${isExpanded ? ' expanded' : ''}`}>
                   <div className="card-item-row">
@@ -372,7 +374,11 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
                       />
                       <span className="card-number">#{card.number}</span>
                       <div className="card-info">
-                        <span className="card-player">{card.player}</span>
+                        <span
+                          className={`card-player${isNameExpanded ? ' expanded' : ''}`}
+                          onClick={e => { e.preventDefault(); setExpandedNameId(isNameExpanded ? null : card.id) }}
+                          title="Tap to see full name"
+                        >{card.player}</span>
                         {notes && <span className="card-notes">{notes}</span>}
                       </div>
                       {condition && (

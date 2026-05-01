@@ -862,6 +862,12 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;
+  cursor: pointer;
+}
+.card-player.expanded {
+  -webkit-line-clamp: unset;
+  display: block;
+  overflow: visible;
 }
 
 .card-notes {
