@@ -385,15 +385,9 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
                       )}
                       <span className={`status-pill ${card.owned ? 'have' : 'need'} no-print`}>
                         {card.owned ? 'Have' : 'Need'}
+                        {card.owned && copies > 1 && <span className="copies-badge"> ×{copies}</span>}
                       </span>
                     </label>
-                    {card.owned && (
-                      <div className="copies-stepper no-print" onClick={e => e.stopPropagation()}>
-                        <button className="copies-btn" onClick={() => onUpdateCopies(card.id, copies - 1)} disabled={copies <= 1} aria-label="Remove one copy">&#8722;</button>
-                        <span className="copies-count">{copies}</span>
-                        <button className="copies-btn" onClick={() => onUpdateCopies(card.id, copies + 1)} aria-label="Add one copy">&#43;</button>
-                      </div>
-                    )}
                     <button
                       className="btn-icon edit-btn no-print"
                       onClick={() => setExpandedCardId(isExpanded ? null : card.id)}

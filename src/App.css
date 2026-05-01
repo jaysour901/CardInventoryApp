@@ -984,6 +984,7 @@
 }
 .status-pill.have { background: rgba(16, 185, 129, 0.15); color: #34d399; }
 .status-pill.need { background: rgba(244, 63, 94, 0.12);  color: #fb7185; }
+.copies-badge { font-weight: 600; opacity: 0.8; }
 
 /* ─────────────────────────────────────
    Copies stepper
