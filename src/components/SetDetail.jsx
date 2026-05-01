@@ -22,7 +22,9 @@ function parsePaste(text) {
     .map(l => {
       const spaceIdx = l.indexOf(' ')
       if (spaceIdx === -1) return null
-      return { number: l.slice(0, spaceIdx), player: l.slice(spaceIdx + 1).trim() }
+      const player = l.slice(spaceIdx + 1).trim()
+      if (!player) return null
+      return { number: l.slice(0, spaceIdx), player }
     })
     .filter(Boolean)
 }
@@ -373,7 +375,7 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
                       />
                       <span className="card-number">#{card.number}</span>
                       <div className="card-info" onClick={e => { e.preventDefault(); setCardPopupId(card.id) }}>
-                        <span className="card-player">{card.player}</span>
+                        <span className={`card-player${!card.player ? ' card-player-empty' : ''}`}>{card.player || '(no name)'}</span>
                         {notes && <span className="card-notes">{notes}</span>}
                       </div>
                       {condition && (
@@ -412,6 +414,19 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
 
                   {isExpanded && (
                     <div className="card-edit-panel no-print">
+                      <div className="card-edit-row">
+                        <div className="card-edit-field card-edit-name">
+                          <label className="card-edit-label">Player Name</label>
+                          <input
+                            type="text"
+                            className="card-edit-input"
+                            placeholder="e.g. Mike Trout"
+                            value={card.player}
+                            onChange={e => onUpdateCard(card.id, { player: e.target.value })}
+                            maxLength={100}
+                          />
+                        </div>
+                      </div>
                       <div className="card-edit-row">
                         <div className="card-edit-field">
                           <label className="card-edit-label">Condition</label>
@@ -460,7 +475,7 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
                 <span className="card-popup-number">#{c.number}</span>
                 <button className="btn-icon help-close" onClick={() => setCardPopupId(null)}>&#10005;</button>
               </div>
-              <div className="card-popup-name">{c.player}</div>
+              <div className={`card-popup-name${!c.player ? ' card-popup-name-empty' : ''}`}>{c.player || '(no name — tap ✏ to edit)'}</div>
               <div className="card-popup-controls">
                 <label className="card-popup-check">
                   <input

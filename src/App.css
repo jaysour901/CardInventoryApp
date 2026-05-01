@@ -948,6 +948,10 @@
   cursor: pointer;
 }
 
+.card-player-empty { color: var(--text-muted); font-style: italic; font-weight: 400; }
+
+.card-popup-name-empty { color: var(--text-muted); font-style: italic; font-weight: 400; font-size: 16px; }
+
 .card-notes {
   font-size: 12px;
   color: var(--text-muted);
@@ -1418,6 +1422,7 @@
   flex: 0 0 160px;
 }
 .card-edit-field.card-edit-notes { flex: 1 1 200px; }
+.card-edit-field.card-edit-name { flex: 1 1 100%; }
 
 .card-edit-label {
   font-size: 10px;
