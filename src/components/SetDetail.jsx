@@ -38,7 +38,7 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
   const [importDone, setImportDone] = useState(null)
   const [showTutorial, setShowTutorial] = useState(false)
   const [expandedCardId, setExpandedCardId] = useState(null)
-  const [expandedNameId, setExpandedNameId] = useState(null)
+  const [cardPopup, setCardPopup] = useState(null)
   const [search, setSearch] = useState('')
 
   const total = set.cards.length
@@ -361,7 +361,6 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
               const condition = card.condition || ''
               const notes = card.notes || ''
               const isExpanded = expandedCardId === card.id
-              const isNameExpanded = expandedNameId === card.id
               return (
                 <li key={card.id} className={`card-item${card.owned ? ' owned' : ' needed'}${isExpanded ? ' expanded' : ''}`}>
                   <div className="card-item-row">
@@ -373,12 +372,8 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
                         className="card-checkbox no-print"
                       />
                       <span className="card-number">#{card.number}</span>
-                      <div className="card-info">
-                        <span
-                          className={`card-player${isNameExpanded ? ' expanded' : ''}`}
-                          onClick={e => { e.preventDefault(); setExpandedNameId(isNameExpanded ? null : card.id) }}
-                          title="Tap to see full name"
-                        >{card.player}</span>
+                      <div className="card-info" onClick={e => { e.preventDefault(); setCardPopup(card) }}>
+                        <span className="card-player">{card.player}</span>
                         {notes && <span className="card-notes">{notes}</span>}
                       </div>
                       {condition && (
@@ -452,6 +447,43 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
       </main>
 
       {showTutorial && <TutorialModal onClose={() => setShowTutorial(false)} />}
+
+      {cardPopup && (() => {
+        const c = cardPopup
+        const copies = c.copies ?? (c.owned ? 1 : 0)
+        return (
+          <>
+            <div className="card-popup-overlay" onClick={() => setCardPopup(null)} />
+            <div className="card-popup">
+              <div className="card-popup-header">
+                <span className="card-popup-number">#{c.number}</span>
+                <button className="btn-icon help-close" onClick={() => setCardPopup(null)}>&#10005;</button>
+              </div>
+              <div className="card-popup-name">{c.player}</div>
+              <div className="card-popup-controls">
+                <label className="card-popup-check">
+                  <input
+                    type="checkbox"
+                    checked={c.owned}
+                    onChange={() => { onToggleOwned(c.id); setCardPopup(prev => ({ ...prev, owned: !prev.owned, copies: !prev.owned ? Math.max(1, prev.copies || 0) : 0 })) }}
+                  />
+                  <span>{c.owned ? 'In my collection' : 'Mark as owned'}</span>
+                </label>
+                {c.owned && (
+                  <div className="card-popup-copies">
+                    <span className="card-popup-copies-label">Copies</span>
+                    <div className="copies-stepper">
+                      <button className="copies-btn" onClick={() => { onUpdateCopies(c.id, copies - 1); setCardPopup(prev => ({ ...prev, copies: Math.max(1, (prev.copies ?? 1) - 1) })) }} disabled={copies <= 1}>&#8722;</button>
+                      <span className="copies-count">{copies}</span>
+                      <button className="copies-btn" onClick={() => { onUpdateCopies(c.id, copies + 1); setCardPopup(prev => ({ ...prev, copies: (prev.copies ?? 1) + 1 })) }}>&#43;</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )
+      })()}
     </div>
   )
 }

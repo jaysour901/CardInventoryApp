@@ -403,6 +403,89 @@
 }
 
 /* ─────────────────────────────────────
+   Card detail popup
+───────────────────────────────────── */
+.card-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+}
+
+.card-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0f1e33;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px 20px 0 0;
+  z-index: 201;
+  padding: 24px 24px 40px;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.card-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.card-popup-number {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.card-popup-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-strong);
+  line-height: 1.3;
+  margin-bottom: 24px;
+  word-break: break-word;
+}
+
+.card-popup-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-popup-check {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.card-popup-check input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  accent-color: var(--have);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.card-popup-copies {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-popup-copies-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────────────
    Hamburger button
 ───────────────────────────────────── */
 .hamburger-btn {
@@ -863,11 +946,6 @@
   overflow: hidden;
   word-break: break-word;
   cursor: pointer;
-}
-.card-player.expanded {
-  -webkit-line-clamp: unset;
-  display: block;
-  overflow: visible;
 }
 
 .card-notes {
