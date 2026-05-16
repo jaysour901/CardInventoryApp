@@ -1423,7 +1423,8 @@
   flex: 0 0 160px;
 }
 .card-edit-field.card-edit-notes { flex: 1 1 200px; }
-.card-edit-field.card-edit-name { flex: 1 1 100%; }
+.card-edit-field.card-edit-num  { flex: 0 0 90px; }
+.card-edit-field.card-edit-name { flex: 1 1 160px; }
 
 .card-edit-label {
   font-size: 10px;

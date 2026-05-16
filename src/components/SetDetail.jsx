@@ -409,6 +409,17 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
                   {isExpanded && (
                     <div className="card-edit-panel no-print">
                       <div className="card-edit-row">
+                        <div className="card-edit-field card-edit-num">
+                          <label className="card-edit-label">Card #</label>
+                          <input
+                            type="text"
+                            className="card-edit-input"
+                            placeholder="e.g. 42"
+                            value={card.number}
+                            onChange={e => onUpdateCard(card.id, { number: e.target.value })}
+                            maxLength={10}
+                          />
+                        </div>
                         <div className="card-edit-field card-edit-name">
                           <label className="card-edit-label">Player Name</label>
                           <input
