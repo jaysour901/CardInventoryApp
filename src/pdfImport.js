@@ -1,8 +1,13 @@
-import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
-
 export async function extractLinesFromPdf(file) {
-  const { getDocument, GlobalWorkerOptions } = await import('pdfjs-dist')
-  GlobalWorkerOptions.workerSrc = workerUrl
+  // Load pdfjs main library and worker module in parallel.
+  // Setting globalThis.pdfjsWorker tells pdfjs to run the worker in the main
+  // thread (fake-worker mode) instead of spawning a Web Worker — this avoids
+  // module-worker browser compatibility issues entirely.
+  const [{ getDocument }, { WorkerMessageHandler }] = await Promise.all([
+    import('pdfjs-dist'),
+    import('pdfjs-dist/build/pdf.worker.min.mjs'),
+  ])
+  globalThis.pdfjsWorker = { WorkerMessageHandler }
 
   const arrayBuffer = await file.arrayBuffer()
   const pdf = await getDocument({ data: arrayBuffer }).promise
@@ -20,7 +25,7 @@ export async function extractLinesFromPdf(file) {
       byY[y] = (byY[y] || '') + item.str
     }
 
-    // PDF Y-axis is bottom-up, sort descending for top-to-bottom reading order
+    // PDF Y-axis is bottom-up — sort descending for top-to-bottom reading order
     const sorted = Object.keys(byY).map(Number).sort((a, b) => b - a)
     for (const y of sorted) {
       allLines.push(byY[y].trim())
