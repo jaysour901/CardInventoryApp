@@ -128,7 +128,7 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
       setImportDone(null)
     } catch (err) {
       console.error('PDF import failed:', err)
-      setPdfError(`Error: ${err?.message || String(err)}`)
+      setPdfError(`${err?.name || 'Error'}: ${err?.message || String(err)}\n\n${err?.stack || '(no stack)'}`)
     } finally {
       setPdfLoading(false)
       e.target.value = ''
@@ -302,7 +302,7 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
               >
                 {pdfLoading ? '⏳ Reading PDF…' : '📄 Upload PDF from TCDB'}
               </button>
-              {pdfError && <span className="bulk-pdf-error">{pdfError}</span>}
+              {pdfError && <pre className="bulk-pdf-error">{pdfError}</pre>}
               <span className="bulk-or">or paste text below</span>
             </div>
 

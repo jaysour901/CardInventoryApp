@@ -1,23 +1,15 @@
 export async function extractLinesFromPdf(file) {
-  // pdfjs-dist v5 requires Promise.withResolvers (added Safari 17.4 / iOS 17.4).
-  // Polyfill it so older devices work.
-  if (!Promise.withResolvers) {
-    Promise.withResolvers = function () {
-      let resolve, reject
-      const promise = new Promise((res, rej) => { resolve = res; reject = rej })
-      return { promise, resolve, reject }
-    }
-  }
-
-  // Load pdfjs main library and worker module in parallel.
-  // Setting globalThis.pdfjsWorker tells pdfjs to run the worker in the main
-  // thread (fake-worker mode) instead of spawning a Web Worker — this avoids
-  // module-worker browser compatibility issues entirely.
-  const [{ getDocument }, { WorkerMessageHandler }] = await Promise.all([
+  // Load pdfjs-dist v3 main library and worker in parallel.
+  // Setting globalThis.pdfjsWorker before calling getDocument tells pdfjs
+  // to run the worker in the main thread (fake-worker mode) — no Web Worker
+  // creation, no browser compatibility issues.
+  const [{ getDocument, GlobalWorkerOptions }, workerModule] = await Promise.all([
     import('pdfjs-dist'),
-    import('pdfjs-dist/build/pdf.worker.min.mjs'),
+    import('pdfjs-dist/build/pdf.worker.min.js'),
   ])
-  globalThis.pdfjsWorker = { WorkerMessageHandler }
+
+  globalThis.pdfjsWorker = workerModule
+  GlobalWorkerOptions.workerSrc = ''  // not used in fake-worker mode but required to be set
 
   const arrayBuffer = await file.arrayBuffer()
   const pdf = await getDocument({ data: arrayBuffer }).promise

@@ -1107,9 +1107,18 @@
 }
 
 .bulk-pdf-error {
-  font-size: 13px;
+  font-size: 11px;
   color: #fb7185;
-  flex: 1;
+  flex: 1 1 100%;
+  white-space: pre-wrap;
+  word-break: break-all;
+  background: rgba(251,113,133,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: monospace;
+  margin-top: 6px;
 }
 
 .bulk-textarea {
