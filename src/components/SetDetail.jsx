@@ -126,8 +126,9 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
       const text = await extractLinesFromPdf(file)
       setPasteText(text)
       setImportDone(null)
-    } catch {
-      setPdfError('Could not read PDF — try the copy-paste method instead.')
+    } catch (err) {
+      console.error('PDF import failed:', err)
+      setPdfError(`Error: ${err?.message || String(err)}`)
     } finally {
       setPdfLoading(false)
       e.target.value = ''
