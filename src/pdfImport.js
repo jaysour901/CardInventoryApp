@@ -1,6 +1,7 @@
+import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
+
 export async function extractLinesFromPdf(file) {
   const { getDocument, GlobalWorkerOptions } = await import('pdfjs-dist')
-  const workerUrl = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).href
   GlobalWorkerOptions.workerSrc = workerUrl
 
   const arrayBuffer = await file.arrayBuffer()
@@ -11,7 +12,7 @@ export async function extractLinesFromPdf(file) {
     const page = await pdf.getPage(p)
     const content = await page.getTextContent()
 
-    // Group text items by their Y position to reconstruct lines
+    // Group text items by Y coordinate to reconstruct reading order
     const byY = {}
     for (const item of content.items) {
       if (!item.str) continue
@@ -19,11 +20,8 @@ export async function extractLinesFromPdf(file) {
       byY[y] = (byY[y] || '') + item.str
     }
 
-    // PDF Y-axis is bottom-up, so sort descending to get reading order
-    const sorted = Object.keys(byY)
-      .map(Number)
-      .sort((a, b) => b - a)
-
+    // PDF Y-axis is bottom-up, sort descending for top-to-bottom reading order
+    const sorted = Object.keys(byY).map(Number).sort((a, b) => b - a)
     for (const y of sorted) {
       allLines.push(byY[y].trim())
     }
