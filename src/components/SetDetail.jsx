@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import TutorialModal from './TutorialModal'
+import { extractLinesFromPdf } from '../pdfImport'
 
 const FILTERS = ['All', 'Have', 'Need']
 
@@ -17,7 +18,7 @@ const CONDITION_CLASS = {
 function parsePaste(text) {
   return text
     .split('\n')
-    .map(l => l.trim())
+    .map(l => l.trim().replace(/^[^\d]+/, ''))  // strip leading non-digit chars (e.g. □ from PDFs)
     .filter(l => /^\d/.test(l))
     .map(l => {
       const spaceIdx = l.indexOf(' ')
@@ -42,6 +43,9 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
   const [expandedCardId, setExpandedCardId] = useState(null)
   const [cardPopupId, setCardPopupId] = useState(null)
   const [search, setSearch] = useState('')
+  const [pdfLoading, setPdfLoading] = useState(false)
+  const [pdfError, setPdfError] = useState(null)
+  const pdfRef = useRef(null)
 
   const total = set.cards.length
   const owned = set.cards.filter(c => c.owned).length
@@ -111,6 +115,23 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
   function openForm() {
     setShowForm(v => !v)
     setShowBulk(false)
+  }
+
+  async function handlePdfUpload(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    setPdfLoading(true)
+    setPdfError(null)
+    try {
+      const text = await extractLinesFromPdf(file)
+      setPasteText(text)
+      setImportDone(null)
+    } catch {
+      setPdfError('Could not read PDF — try the copy-paste method instead.')
+    } finally {
+      setPdfLoading(false)
+      e.target.value = ''
+    }
   }
 
   return (
@@ -258,18 +279,38 @@ export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddC
 
             <div className="bulk-hint-row">
               <p className="bulk-hint">
-                Paste a checklist below. Each line should start with a card number followed by the player name — extra tags like RC, MGR, UER are kept as part of the name.
+                Upload a PDF checklist from TCDB, or paste text directly below.
               </p>
               <button className="tutorial-link" onClick={() => setShowTutorial(true)}>
                 &#9432; How to get data from TCDB.com
               </button>
             </div>
+
+            <input
+              ref={pdfRef}
+              type="file"
+              accept="application/pdf,.pdf"
+              style={{ display: 'none' }}
+              onChange={handlePdfUpload}
+            />
+            <div className="bulk-pdf-row">
+              <button
+                className="btn btn-secondary"
+                onClick={() => { setPdfError(null); pdfRef.current.click() }}
+                disabled={pdfLoading}
+              >
+                {pdfLoading ? '⏳ Reading PDF…' : '📄 Upload PDF from TCDB'}
+              </button>
+              {pdfError && <span className="bulk-pdf-error">{pdfError}</span>}
+              <span className="bulk-or">or paste text below</span>
+            </div>
+
             <textarea
               className="bulk-textarea"
               placeholder={"12 National League 1964 Str LL\n70 Bill Skowron\n127 Frank Lary\n185 Max Alvis RC\n..."}
               value={pasteText}
               onChange={e => { setPasteText(e.target.value); setImportDone(null) }}
-              rows={10}
+              rows={8}
             />
 
             {parsedCards.length > 0 && (

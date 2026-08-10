@@ -1092,6 +1092,26 @@
   line-height: 1.6;
 }
 
+.bulk-pdf-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.bulk-or {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.bulk-pdf-error {
+  font-size: 13px;
+  color: #fb7185;
+  flex: 1;
+}
+
 .bulk-textarea {
   width: 100%;
   box-sizing: border-box;
