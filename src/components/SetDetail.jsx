@@ -16,16 +16,22 @@ const CONDITION_CLASS = {
 }
 
 function parsePaste(text) {
-  return text
-    .split('\n')
-    .map(l => l.trim().replace(/^[^\d]+/, ''))  // strip leading non-digit chars (e.g. □ from PDFs)
-    .filter(l => /^\d/.test(l))
-    .map(l => {
-      const spaceIdx = l.indexOf(' ')
+  // PDFs from TCDB use □ as a checkbox before each card entry.
+  // Splitting on □ naturally handles multi-column layouts where several
+  // cards share the same Y coordinate and end up on one extracted line.
+  // Plain copy-paste text has no □, so fall back to newline splitting.
+  const segments = text.includes('□')
+    ? text.split('□').map(s => s.trim())
+    : text.split('\n').map(l => l.trim())
+
+  return segments
+    .filter(s => /^\d/.test(s))
+    .map(s => {
+      const spaceIdx = s.indexOf(' ')
       if (spaceIdx === -1) return null
-      const player = l.slice(spaceIdx + 1).trim()
+      const player = s.slice(spaceIdx + 1).replace(/\s+/g, ' ').trim()
       if (!player) return null
-      return { number: l.slice(0, spaceIdx), player }
+      return { number: s.slice(0, spaceIdx), player }
     })
     .filter(Boolean)
 }
