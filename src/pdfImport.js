@@ -1,16 +1,13 @@
+// Static imports ensure Vite bundles pdfjs into a predictable vendor chunk
+// that the service worker precaches at install time — avoiding "Failed to fetch
+// dynamically imported module" errors caused by SW version mismatches or timeouts.
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist'
+import workerSrc from 'pdfjs-dist/build/pdf.worker.min.js?url'
+
+// Set once at module load; safe to call multiple times (idempotent).
+GlobalWorkerOptions.workerSrc = workerSrc
+
 export async function extractLinesFromPdf(file) {
-  // Load pdfjs-dist v3 main library and worker in parallel.
-  // Setting globalThis.pdfjsWorker before calling getDocument tells pdfjs
-  // to run the worker in the main thread (fake-worker mode) — no Web Worker
-  // creation, no browser compatibility issues.
-  const [{ getDocument, GlobalWorkerOptions }, workerModule] = await Promise.all([
-    import('pdfjs-dist'),
-    import('pdfjs-dist/build/pdf.worker.min.js'),
-  ])
-
-  globalThis.pdfjsWorker = workerModule
-  GlobalWorkerOptions.workerSrc = ''  // not used in fake-worker mode but required to be set
-
   const arrayBuffer = await file.arrayBuffer()
   const pdf = await getDocument({ data: arrayBuffer }).promise
   const allLines = []
