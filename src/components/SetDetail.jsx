@@ -16,22 +16,35 @@ const CONDITION_CLASS = {
 }
 
 function parsePaste(text) {
-  // PDFs from TCDB use □ as a checkbox before each card entry.
-  // Splitting on □ naturally handles multi-column layouts where several
-  // cards share the same Y coordinate and end up on one extracted line.
-  // Plain copy-paste text has no □, so fall back to newline splitting.
-  const segments = text.includes('□')
-    ? text.split('□').map(s => s.trim())
-    : text.split('\n').map(l => l.trim())
+  let segments
+  if (text.includes('□')) {
+    // Copy-paste from TCDB with explicit checkbox separators
+    segments = text.split('□').map(s => s.trim())
+  } else {
+    // Split on newlines, then detect merged columns within each line.
+    // Multi-column PDFs produce rows like "1 Brock HL64 Nolan125 Perez" —
+    // split at non-whitespace/non-digit → digit+space boundaries to recover
+    // individual card entries from concatenated columns.
+    segments = text.split('\n').flatMap(line => {
+      const trimmed = line.trim()
+      if (!trimmed) return []
+      return trimmed.split(/(?<=[^\s\d])(?=\d+\s)/)
+    })
+  }
 
   return segments
+    .map(s => s.trim())
     .filter(s => /^\d/.test(s))
     .map(s => {
       const spaceIdx = s.indexOf(' ')
       if (spaceIdx === -1) return null
+      const numStr = s.slice(0, spaceIdx)
+      // Card numbers are only digits optionally followed by one letter (e.g. "1a", "23b").
+      // This filters out date/time strings like "8/14/26" or "12:34" from PDF headers.
+      if (!/^\d+[a-zA-Z]?$/.test(numStr)) return null
       const player = s.slice(spaceIdx + 1).replace(/\s+/g, ' ').trim()
       if (!player) return null
-      return { number: s.slice(0, spaceIdx), player }
+      return { number: numStr, player }
     })
     .filter(Boolean)
 }
