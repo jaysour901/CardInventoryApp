@@ -32,21 +32,25 @@ function parsePaste(text) {
     })
   }
 
-  return segments
-    .map(s => s.trim())
-    .filter(s => /^\d/.test(s))
-    .map(s => {
-      const spaceIdx = s.indexOf(' ')
-      if (spaceIdx === -1) return null
-      const numStr = s.slice(0, spaceIdx)
-      // Card numbers are only digits optionally followed by one letter (e.g. "1a", "23b").
-      // This filters out date/time strings like "8/14/26" or "12:34" from PDF headers.
-      if (!/^\d+[a-zA-Z]?$/.test(numStr)) return null
-      const player = s.slice(spaceIdx + 1).replace(/\s+/g, ' ').trim()
-      if (!player) return null
-      return { number: numStr, player }
-    })
-    .filter(Boolean)
+  // Use a Map so each card number only appears once: first occurrence wins.
+  // When a card's name wraps to a second PDF line, that continuation can
+  // look like a new entry (e.g. "132 continued…"); keeping the first
+  // occurrence ensures the real entry (from the card's own row) is used.
+  const seen = new Map()
+  for (const s of segments) {
+    const trimmed = s.trim()
+    if (!/^\d/.test(trimmed)) continue
+    const spaceIdx = trimmed.indexOf(' ')
+    if (spaceIdx === -1) continue
+    const numStr = trimmed.slice(0, spaceIdx)
+    // Card numbers are only digits optionally followed by one letter (e.g. "1a", "23b").
+    // This filters out date/time strings like "8/14/26" or "12:34" from PDF headers.
+    if (!/^\d+[a-zA-Z]?$/.test(numStr)) continue
+    const player = trimmed.slice(spaceIdx + 1).replace(/\s+/g, ' ').trim()
+    if (!player) continue
+    if (!seen.has(numStr)) seen.set(numStr, { number: numStr, player })
+  }
+  return [...seen.values()]
 }
 
 export default function SetDetail({ set, onBack, onUpdateSet, onOpenHelp, onAddCard, onBulkAddCards, onToggleOwned, onUpdateCopies, onUpdateCard, onDeleteCard }) {
