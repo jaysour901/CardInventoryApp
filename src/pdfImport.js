@@ -4,7 +4,6 @@
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.js?url'
 
-// Set once at module load; safe to call multiple times (idempotent).
 GlobalWorkerOptions.workerSrc = workerSrc
 
 export async function extractLinesFromPdf(file) {
@@ -16,48 +15,95 @@ export async function extractLinesFromPdf(file) {
     const page = await pdf.getPage(p)
     const content = await page.getTextContent()
 
-    // Group text items by Y coordinate to reconstruct reading order.
-    // Store each item with its X position and width so we can detect columns.
-    const byY = {}
+    // Collect non-empty text items with position info
+    const items = []
     for (const item of content.items) {
-      if (!item.str) continue
-      const y = Math.round(item.transform[5])
-      if (!byY[y]) byY[y] = []
-      byY[y].push({
+      if (!item.str || !item.str.trim()) continue
+      items.push({
         x: item.transform[4],
+        y: item.transform[5],
         str: item.str,
-        width: item.width || 0,
+        w: item.width || 0,
       })
     }
+    if (!items.length) continue
 
-    // PDF Y-axis is bottom-up — sort descending for top-to-bottom reading order
-    const sorted = Object.keys(byY).map(Number).sort((a, b) => b - a)
+    // Sort top-to-bottom (descending Y), then left-to-right (ascending X)
+    items.sort((a, b) => b.y - a.y || a.x - b.x)
 
-    for (const y of sorted) {
-      // Sort items left-to-right within this row
-      const items = byY[y].sort((a, b) => a.x - b.x)
-
-      // Walk items left-to-right; when the gap from the end of the previous
-      // item to the start of the next item exceeds the threshold, treat it as
-      // a column break and emit the current column as its own line.
-      // 20pt ≈ 7mm — large enough to skip inter-word spaces but small enough
-      // to catch the narrowest column gutters in typical TCDB checklists.
-      const COL_GAP = 20
-
-      let col = items[0].str
-      let prevEnd = items[0].x + items[0].width
-
-      for (let i = 1; i < items.length; i++) {
-        const gap = items[i].x - prevEnd
-        if (gap > COL_GAP) {
-          allLines.push(col.trim())
-          col = items[i].str
-        } else {
-          col += items[i].str
-        }
-        prevEnd = items[i].x + items[i].width
+    // Cluster into visual rows: items within 3pt on the Y axis share a row.
+    // This handles sub-pixel baseline variations that would otherwise split one
+    // visual row into multiple Y buckets.
+    const ROW_SNAP = 3
+    const rows = []
+    for (const item of items) {
+      const last = rows[rows.length - 1]
+      if (last && Math.abs(last[0].y - item.y) <= ROW_SNAP) {
+        last.push(item)
+      } else {
+        rows.push([item])
       }
-      allLines.push(col.trim())
+    }
+
+    // Column-buffer approach: maintain one text buffer per column across rows.
+    // When a new card-number entry starts in a column, the previous buffer is
+    // flushed to allLines. When a non-card segment appears in a column position
+    // that already has an active entry, it is appended — this joins wrapped
+    // continuation lines (e.g. "RC", "Frazier / Tom Herr…") back to their card.
+    const COL_GAP   = 20  // pt gap within a row that marks a new column
+    const COL_MATCH = 40  // pt tolerance for recognising the same column across rows
+
+    // buffers: approx-column-X → accumulated text for the card active in that column
+    const buffers = new Map()
+
+    // Find the existing buffer key nearest to x (within COL_MATCH), or x itself
+    function nearestKey(x) {
+      let best = null, bestDist = Infinity
+      for (const k of buffers.keys()) {
+        const d = Math.abs(k - x)
+        if (d < bestDist && d <= COL_MATCH) { bestDist = d; best = k }
+      }
+      return best ?? x
+    }
+
+    for (const row of rows) {
+      row.sort((a, b) => a.x - b.x)
+
+      // Split row into column segments by X gap
+      const segs = []
+      let s = { x: row[0].x, end: row[0].x + row[0].w, str: row[0].str }
+      for (let i = 1; i < row.length; i++) {
+        if (row[i].x - s.end > COL_GAP) {
+          segs.push({ x: s.x, str: s.str.trim() })
+          s = { x: row[i].x, end: row[i].x + row[i].w, str: row[i].str }
+        } else {
+          s.str += row[i].str
+          s.end = row[i].x + row[i].w
+        }
+      }
+      segs.push({ x: s.x, str: s.str.trim() })
+
+      for (const seg of segs) {
+        if (!seg.str) continue
+        const key = nearestKey(seg.x)
+
+        if (/^\d+[a-zA-Z]?\s/.test(seg.str)) {
+          // New card entry: flush the previous card in this column, start fresh
+          const prev = buffers.get(key)
+          if (prev) allLines.push(prev.trim())
+          buffers.delete(key)
+          buffers.set(seg.x, seg.str)  // anchor at actual X so continuations match
+        } else if (buffers.has(key)) {
+          // Continuation of the active card in this column — join it
+          buffers.set(key, buffers.get(key) + ' ' + seg.str)
+        }
+        // else: orphan non-card text (PDF header/footer) with no active column — ignore
+      }
+    }
+
+    // Flush remaining column buffers at end of page
+    for (const [, text] of buffers) {
+      if (text) allLines.push(text.trim())
     }
   }
 
