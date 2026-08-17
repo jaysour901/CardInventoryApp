@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef } from 'react'
 import TradingCardIcon from './TradingCardIcon'
-import BtcLogo from './BtcLogo'
+
+const BASE = import.meta.env.BASE_URL
 
 const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey', 'Other']
 
@@ -67,7 +68,7 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
         <div className="header-inner">
           <div className="header-top-row">
             <div className="header-title">
-              <BtcLogo size={40} className="card-icon-svg" />
+              <img src={`${BASE}icons/icon-192.png`} alt="BTC logo" className="header-logo-img" />
               <h1 className="app-name-banner">BTC Set Collector</h1>
             </div>
             <button className="hamburger-btn" onClick={onOpenHelp} aria-label="Open help">
