@@ -11,7 +11,7 @@ export default defineConfig({
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
         name: 'BTC Set Collector',
-        short_name: 'BTC Cards',
+        short_name: 'BTC Set Collector',
         description: 'Track your trading card sets — from Beyond The Cardboard',
         theme_color: '#1a3a5c',
         background_color: '#142d4a',
