@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef } from 'react'
 import TradingCardIcon from './TradingCardIcon'
+import BtcLogo from './BtcLogo'
 
 const SPORTS = ['Baseball', 'Football', 'Basketball', 'Hockey', 'Other']
 
@@ -31,7 +32,7 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
         const added = onImport(data)
         setImportMsg({ ok: true, text: `${added} set${added !== 1 ? 's' : ''} imported successfully!` })
       } catch {
-        setImportMsg({ ok: false, text: 'Invalid file — please use a Set Collector export.' })
+        setImportMsg({ ok: false, text: 'Invalid file — please use a BTC Set Collector export.' })
       }
       setTimeout(() => setImportMsg(null), 3500)
     }
@@ -66,8 +67,8 @@ export default function SetList({ sets, onAddSet, onSelectSet, onDeleteSet, onEx
         <div className="header-inner">
           <div className="header-top-row">
             <div className="header-title">
-              <TradingCardIcon size={38} className="card-icon-svg" />
-              <h1 className="app-name-banner">Set Collector</h1>
+              <BtcLogo size={40} className="card-icon-svg" />
+              <h1 className="app-name-banner">BTC Set Collector</h1>
             </div>
             <button className="hamburger-btn" onClick={onOpenHelp} aria-label="Open help">
               <span /><span /><span />

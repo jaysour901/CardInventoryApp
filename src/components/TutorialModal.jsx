@@ -60,7 +60,7 @@ const STEPS = [
     ],
   },
   {
-    title: 'Upload the PDF in Set Collector',
+    title: 'Upload the PDF in BTC Set Collector',
     img: null,
     bullets: [
       'Return to this app and open your set — or create a new one first if you haven\'t already.',

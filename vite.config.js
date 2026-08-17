@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
-        name: 'Set Collector',
-        short_name: 'Set Collector',
-        description: 'Track your trading card sets — see what you have and what you need',
+        name: 'BTC Set Collector',
+        short_name: 'BTC Cards',
+        description: 'Track your trading card sets — from Beyond The Cardboard',
         theme_color: '#1a3a5c',
         background_color: '#142d4a',
         display: 'standalone',
@@ -39,7 +39,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        cacheId: 'set-collector-v3',
+        cacheId: 'btc-set-collector-v1',
         // Always fetch the HTML shell from network so updates are immediate
         navigateFallbackDenylist: [],
         runtimeCaching: [
