@@ -2,8 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Cloudflare Pages serves the app from the domain root; GitHub Pages serves it
+// from /CardInventoryApp/. CF_PAGES is set automatically in Cloudflare builds.
+const base = process.env.CF_PAGES ? '/' : '/CardInventoryApp/'
+
 export default defineConfig({
-  base: '/CardInventoryApp/',
+  base,
   plugins: [
     react(),
     VitePWA({
@@ -17,8 +21,8 @@ export default defineConfig({
         background_color: '#142d4a',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/CardInventoryApp/',
-        start_url: '/CardInventoryApp/',
+        scope: base,
+        start_url: base,
         icons: [
           {
             src: 'icons/icon-192.png',
