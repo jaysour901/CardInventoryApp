@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// Cloudflare Pages serves the app from the domain root; GitHub Pages serves it
-// from /CardInventoryApp/. CF_PAGES is set automatically in Cloudflare builds.
-const base = process.env.CF_PAGES ? '/' : '/CardInventoryApp/'
+// Cloudflare (Pages or Workers) serves the app from the domain root; GitHub Pages
+// serves it from /CardInventoryApp/. CF_PAGES / WORKERS_CI are set automatically
+// in Cloudflare builds.
+const onCloudflare = process.env.CF_PAGES || process.env.WORKERS_CI
+const base = onCloudflare ? '/' : '/CardInventoryApp/'
 
 export default defineConfig({
   base,
